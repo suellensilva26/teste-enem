@@ -1,20 +1,40 @@
+// Vercel Serverless Function
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ success: false, error: 'Method Not Allowed' });
+  // Habilitar CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Lidar com preflight
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
     return;
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Method Not Allowed' });
   }
 
   try {
     const response = await fetch('https://script.google.com/macros/s/AKfycbxjFunqElNdASD56Ys5XDXPNeIGZPLufPeVQRHQ_Sc_jgX8y0aBtsdoXeo1Zap4kv3gQ/usercontent', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(req.body),
     });
 
+    if (!response.ok) {
+      throw new Error(`Google Script responded with status: ${response.status}`);
+    }
+
     const data = await response.json();
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ success: false, error: error.toString() });
+    console.error('Error in API route:', error);
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || error.toString() 
+    });
   }
 }
-
