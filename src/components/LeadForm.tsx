@@ -34,8 +34,10 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     setError('')
 
     try {
+      console.log('📤 Enviando para Supabase:', formData)
+      
       // Inserir lead na tabela 'leads' do Supabase
-      const { error: supabaseError } = await supabase
+      const { data, error: supabaseError } = await supabase
         .from('leads')
         .insert([
           {
@@ -45,10 +47,14 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
             university: formData.university
           }
         ])
+        .select()
 
       if (supabaseError) {
+        console.error('❌ Erro Supabase:', supabaseError)
         throw supabaseError
       }
+
+      console.log('✅ Lead salvo no Supabase:', data)
 
       // Sucesso
       setMessage('Lead enviado com sucesso!')
