@@ -30,6 +30,9 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     try {
       // Usar API route local para evitar problemas de CORS
       const API_URL = '/api/lead'
+      
+      console.log('📤 Enviando dados para:', API_URL)
+      console.log('📦 Dados:', formData)
 
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -39,7 +42,17 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         body: JSON.stringify(formData)
       })
 
+      console.log('📥 Resposta recebida:', response.status, response.statusText)
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }))
+        console.error('❌ Erro na resposta:', errorData)
+        setError(errorData.error || `Erro ${response.status}: ${response.statusText}`)
+        return
+      }
+
       const result = await response.json()
+      console.log('✅ Resultado:', result)
 
       if (result.success) {
         console.log('✅ Lead capturado com sucesso!')
@@ -55,11 +68,11 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         onSuccess()
         setFormData({ name: '', phone: '', email: '', university: '' })
       } else {
-        setError('Erro ao enviar. Tente novamente.')
+        setError(result.error || 'Erro ao enviar. Tente novamente.')
       }
-    } catch (err) {
-      console.error('Erro:', err)
-      setError('Erro de conexão. Tente novamente.')
+    } catch (err: any) {
+      console.error('❌ Erro no fetch:', err)
+      setError(err.message || 'Erro de conexão. Tente novamente.')
     } finally {
       setLoading(false)
     }
