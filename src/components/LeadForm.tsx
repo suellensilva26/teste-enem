@@ -28,18 +28,21 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     setError('')
 
     try {
-      // Usar API route local para evitar problemas de CORS
-      const API_URL = '/api/lead'
-      
-      console.log('📤 Enviando dados para:', API_URL)
-      console.log('📦 Dados:', formData)
+      // Enviar diretamente para Formspree usando form-data
+      const formDataToSend = new FormData()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('phone', formData.phone)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('university', formData.university)
 
-      const response = await fetch(API_URL, {
+      console.log('📤 Enviando dados para Formspree:', formData)
+
+      const response = await fetch('https://formspree.io/f/mvgdzwvy', {
         method: 'POST',
+        body: formDataToSend,
         headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+          'Accept': 'application/json'
+        }
       })
 
       console.log('📥 Resposta recebida:', response.status, response.statusText)
@@ -54,7 +57,8 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       const result = await response.json()
       console.log('✅ Resultado:', result)
 
-      if (result.success) {
+      // Formspree retorna sucesso mesmo sem campo success explícito
+      if (response.ok) {
         console.log('✅ Lead capturado com sucesso!')
         // Facebook Pixel - Lead
         if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -68,7 +72,7 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         onSuccess()
         setFormData({ name: '', phone: '', email: '', university: '' })
       } else {
-        setError(result.error || 'Erro ao enviar. Tente novamente.')
+        setError('Erro ao enviar. Tente novamente.')
       }
     } catch (err: any) {
       console.error('❌ Erro no fetch:', err)
