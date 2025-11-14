@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "pages/api/lead.js": {
-      "runtime": "nodejs22.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/lead",
