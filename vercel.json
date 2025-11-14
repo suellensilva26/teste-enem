@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/lead.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/lead",
@@ -6,4 +11,3 @@
     }
   ]
 }
-
