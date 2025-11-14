@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Quiz de alta conversão NeuroHack ENEM 2025",
   "type": "module",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
