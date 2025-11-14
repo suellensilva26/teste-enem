@@ -36,6 +36,14 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     try {
       console.log('📤 Enviando para Supabase:', formData)
       
+      // Verificar se Supabase está configurado
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+      
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Variáveis de ambiente do Supabase não configuradas! Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Netlify.')
+      }
+      
       // Inserir lead na tabela 'leads' do Supabase
       const { data, error: supabaseError } = await supabase
         .from('leads')
@@ -50,8 +58,23 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         .select()
 
       if (supabaseError) {
-        console.error('❌ Erro Supabase:', supabaseError)
-        throw supabaseError
+        console.error('❌ Erro Supabase completo:', supabaseError)
+        console.error('❌ Código do erro:', supabaseError.code)
+        console.error('❌ Mensagem:', supabaseError.message)
+        console.error('❌ Detalhes:', supabaseError.details)
+        console.error('❌ Hint:', supabaseError.hint)
+        
+        // Mensagem de erro mais específica
+        let errorMessage = 'Erro ao enviar lead, tente novamente.'
+        if (supabaseError.code === 'PGRST301' || supabaseError.message?.includes('permission denied')) {
+          errorMessage = 'Erro: Permissão negada. Verifique a política RLS no Supabase.'
+        } else if (supabaseError.code === '23505') {
+          errorMessage = 'Este email já foi cadastrado.'
+        } else if (supabaseError.message) {
+          errorMessage = `Erro: ${supabaseError.message}`
+        }
+        
+        throw new Error(errorMessage)
       }
 
       console.log('✅ Lead salvo no Supabase:', data)
@@ -84,7 +107,7 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       }
     } catch (err: any) {
       console.error('Erro ao enviar lead:', err)
-      setError('Erro ao enviar lead, tente novamente.')
+      setError(err.message || 'Erro ao enviar lead, tente novamente.')
     } finally {
       setLoading(false)
     }
