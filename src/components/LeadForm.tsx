@@ -38,7 +38,9 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       formDataToSend.append('email', formData.email)
       formDataToSend.append('university', formData.university)
 
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      // Enviar dados para Google Apps Script
+      // Usando no-cors para evitar problemas de CORS
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         body: formDataToSend,
         mode: 'no-cors' // Necessário para Google Apps Script
