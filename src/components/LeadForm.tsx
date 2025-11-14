@@ -29,7 +29,7 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
 
     try {
       // URL do Google Apps Script
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbsiyUVKanp7vhnnSV9O4DTUEicbMTneKHnRddbu5Hs9KdtPgzevCHauR98nh/usercontent'
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjFunqElNdASD56Ys5XDXPNeIGZPLufPeVQRHQ_Sc_jgX8y0aBtsdoXeo1Zap4kv3gQ/usercontent'
 
       const response = await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
