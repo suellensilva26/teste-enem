@@ -1,5 +1,25 @@
+/**
+ * Formulário de Captura de Leads - HTML PURO
+ * 
+ * IMPORTANTE: Este formulário usa HTML nativo sem JavaScript customizado.
+ * O envio é feito DIRETAMENTE para Formspree via POST nativo do navegador.
+ * 
+ * NÃO USE:
+ * - fetch() ou axios para enviar dados
+ * - APIs internas (/api/lead)
+ * - Handlers customizados de submit
+ * - Manipulação de estado para envio
+ * 
+ * O formulário funciona apenas com:
+ * - action="https://formspree.io/f/mvgdzwvy"
+ * - method="POST"
+ * - Campos com atributo name correto
+ * 
+ * Os leads aparecem automaticamente no painel do Formspree.
+ */
+
 interface LeadFormProps {
-  onSuccess: () => void
+  onSuccess?: () => void
 }
 
 export default function LeadForm({ onSuccess }: LeadFormProps) {
@@ -9,7 +29,7 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
       method="POST"
       className="space-y-4 bg-gray-900 p-6 rounded-lg border-2 border-yellow-400"
       onSubmit={() => {
-        // Facebook Pixel - Lead
+        // Facebook Pixel - Lead (apenas tracking, não interfere no envio)
         if (typeof window !== 'undefined' && (window as any).fbq) {
           (window as any).fbq('track', 'Lead', {
             content_name: 'Quiz Lead',
@@ -17,10 +37,12 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
             currency: 'BRL'
           });
         }
-        // Chamar onSuccess após um pequeno delay para garantir que o submit aconteceu
-        setTimeout(() => {
-          onSuccess()
-        }, 100)
+        // Chamar onSuccess se fornecido (opcional, não bloqueia o envio)
+        if (onSuccess) {
+          setTimeout(() => {
+            onSuccess()
+          }, 100)
+        }
       }}
     >
       <div>

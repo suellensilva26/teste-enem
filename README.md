@@ -124,6 +124,35 @@ src/
 
 ## 🔧 Configuração
 
+### 📝 Captura de Leads - Formspree (HTML PURO)
+
+**IMPORTANTE**: O formulário de captura de leads usa HTML nativo direto para Formspree.
+
+**NÃO USE**:
+- ❌ APIs internas (`/api/lead`)
+- ❌ fetch() ou axios para enviar dados
+- ❌ Handlers customizados de submit
+- ❌ Manipulação de estado para envio
+
+**O formulário funciona apenas com**:
+- ✅ `action="https://formspree.io/f/mvgdzwvy"`
+- ✅ `method="POST"`
+- ✅ Campos com atributo `name` correto
+
+**Onde ver os leads**:
+- Dashboard Formspree: https://formspree.io/forms/mvgdzwvy → aba "Submissões"
+- Email: Configure o destinatário no painel do Formspree
+
+**Arquivos removidos** (não são mais necessários):
+- ❌ `api/lead.js` (DELETADO)
+- ❌ `api/package.json` (DELETADO)
+- ❌ Qualquer código relacionado a `/api/lead`
+
+**Arquivo do formulário**: `src/components/LeadForm.tsx`
+- Usa HTML puro com `action` e `method` direto para Formspree
+- Mantém apenas estilos Tailwind CSS
+- Facebook Pixel tracking (não interfere no envio)
+
 ### Integração com Gateway de Pagamento
 
 Edite `src/components/CTAButton.tsx` e substitua a URL no método `handlePurchase`:
@@ -140,6 +169,7 @@ const handlePurchase = () => {
 - **Cálculos**: Ajuste `src/utils/calculations.ts`
 - **Cores**: Modifique `tailwind.config.js`
 - **Copywriting**: Edite os textos nos componentes
+- **Formspree URL**: Edite `action` em `src/components/LeadForm.tsx` (se necessário)
 
 ## 📊 Métricas Esperadas
 
