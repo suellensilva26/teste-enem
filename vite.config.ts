@@ -7,13 +7,19 @@ export default defineConfig({
   build: {
     // Forçar rebuild completo sem cache
     emptyOutDir: true,
+    // Desabilitar cache completamente
+    cache: false,
     rollupOptions: {
       output: {
-        // Adicionar hash único para forçar atualização
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        // Hash único baseado em timestamp para forçar atualização
+        entryFileNames: `assets/[name]-${Date.now()}-[hash].js`,
+        chunkFileNames: `assets/[name]-${Date.now()}-[hash].js`,
+        assetFileNames: `assets/[name]-${Date.now()}-[hash].[ext]`
       }
     }
+  },
+  // Desabilitar cache do Vite
+  server: {
+    force: true
   }
 })
