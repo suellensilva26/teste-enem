@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import { QuizResult as QuizResultType } from '../utils/calculations'
 import CouponBanner from './CouponBanner'
 import { trackResultView } from '../utils/facebookPixel'
@@ -174,48 +175,176 @@ function QuizResult({ result }: QuizResultProps) {
           </div>
         </div>
 
-        {/* BÔNUS VÁLIDOS HOJE */}
-        <div className="bg-green-900/30 rounded-lg p-4 border-l-4 border-green-500">
-          <div className="font-black text-green-400 text-base mb-3">
-            🎁 BÔNUS EXCLUSIVOS (Válidos APENAS HOJE):
-          </div>
-          <div className="space-y-2 text-sm text-white">
-            <div className="flex items-start gap-2">
-              <span className="text-green-400">✅</span>
+        {/* BÔNUS VÁLIDOS HOJE - VERSÃO APRIMORADA */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="bg-gradient-to-br from-green-900/40 to-emerald-900/40 rounded-xl p-6 border-2 border-green-500 shadow-lg shadow-green-500/20"
+        >
+          <motion.div 
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+            className="text-center mb-6"
+          >
+            <motion.div 
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+              className="text-4xl mb-2"
+            >
+              🎁
+            </motion.div>
+            <div className="font-black text-green-400 text-xl mb-2">
+              BÔNUS EXCLUSIVOS (Válidos APENAS HOJE)
+            </div>
+            <motion.div 
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.3, type: "spring" }}
+              className="bg-yellow-400/20 border-2 border-yellow-400 rounded-lg p-3 mb-4"
+            >
+              <motion.div 
+                animate={{ opacity: [1, 0.8, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-yellow-400 font-black text-lg"
+              >
+                VALOR TOTAL: R$ 694 de bônus
+              </motion.div>
+              <div className="text-white text-sm font-bold">
+                SÓ QUEM COMPRAR HOJE RECEBE TUDO DE GRAÇA
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* 5 EBOOKS ESPECIALIZADOS */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-black/50 rounded-lg p-4 mb-4 border-l-4 border-blue-500 hover:border-blue-400 transition-all"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-blue-400 text-2xl">📚</span>
               <div>
-                <span className="font-bold">5 Ebooks Especializados</span>
-                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+                <span className="font-black text-blue-400 text-lg">5 EBOOKS ESPECIALIZADOS</span>
+                <span className="text-green-400 text-sm block font-bold">(R$ 497 de valor)</span>
               </div>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="text-green-400">✅</span>
-              <div>
-                <span className="font-bold">8 Técnicas de Chute Inteligente</span>
-                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+            <div className="space-y-2 text-sm text-white ml-8">
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400">•</span>
+                <span><span className="font-bold">NeuroHack Cerebral:</span> Sua mente em máquina de aprovação</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400">•</span>
+                <span><span className="font-bold">Padrões Escondidos:</span> O que REALMENTE cai no ENEM</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400">•</span>
+                <span><span className="font-bold">Protocolo Acelerado:</span> Estude 48h e recupere o ano</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400">•</span>
+                <span><span className="font-bold">Método Feynman Turbo:</span> Memorize qualquer coisa em 20 min</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400">•</span>
+                <span><span className="font-bold">Estratégias Secretas:</span> Acerte sem estudar (seu seguro)</span>
               </div>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="text-green-400">✅</span>
+          </motion.div>
+
+          {/* 8 TÉCNICAS DE CHUTE INTELIGENTE */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-black/50 rounded-lg p-4 mb-4 border-l-4 border-purple-500 hover:border-purple-400 transition-all"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-purple-400 text-2xl">🎲</span>
+              <div>
+                <span className="font-black text-purple-400 text-lg">8 TÉCNICAS DE CHUTE INTELIGENTE</span>
+                <span className="text-green-400 text-sm block font-bold">(R$ 197 de valor)</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-white ml-8">
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Análise de padrão visual</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Eliminação científica de absurdos</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Palavra-chave mágica</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Intervalo de respostas</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Lógica matemática de prova</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Psicologia do cansaço</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Exclusão dupla estratégica</span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-purple-400">•</span>
+                <span>Timing: deixa branco e volta</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* OUTROS BÔNUS */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="space-y-2 text-sm text-white mb-4"
+          >
+            <div className="flex items-start gap-2 bg-black/30 rounded-lg p-3">
+              <span className="text-green-400 text-xl">✅</span>
               <div>
                 <span className="font-bold">Suporte WhatsApp 24h</span>
                 <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
               </div>
             </div>
-            <div className="flex items-start gap-2">
-              <span className="text-green-400">✅</span>
+            <div className="flex items-start gap-2 bg-black/30 rounded-lg p-3">
+              <span className="text-green-400 text-xl">✅</span>
               <div>
                 <span className="font-bold">2 Aulas ao Vivo (HOJE + AMANHÃ)</span>
                 <span className="text-red-400 text-xs block ml-0 font-bold">🎯 BÔNUS EXCLUSIVO: Apenas para os 15 primeiros que comprarem acesso ao App Premium</span>
                 <span className="text-gray-400 text-xs block ml-0">(Esta aula ao vivo NÃO estará disponível para todos - apenas para os 15 primeiros)</span>
               </div>
             </div>
-          </div>
-          <div className="mt-3 pt-3 border-t border-green-500/30">
-            <p className="text-green-400 text-xs font-bold">
+          </motion.div>
+
+          {/* MENSAGEM DE URGÊNCIA */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.7, type: "spring" }}
+            className="bg-gradient-to-r from-red-900/50 to-orange-900/50 rounded-lg p-4 border-2 border-red-500"
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">⚡</span>
+              <span className="text-white font-black text-base">Acesso imediato. Começa a ativar agora.</span>
+            </div>
+            <p className="text-red-300 text-xs font-bold">
               ⚠️ IMPORTANTE: Estes bônus são válidos APENAS HOJE. Após 24h, você recebe apenas o APP.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Solução */}
