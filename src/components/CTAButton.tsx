@@ -150,7 +150,10 @@ function CTAButton({ timeRemaining, price = 97 }: CTAButtonProps) {
             </div>
             <div className="flex items-center gap-3 text-white text-sm">
               <span className="text-success text-xl">✅</span>
-              <span>2 Aulas ao vivo (HOJE + AMANHÃ)</span>
+              <div>
+                <span>2 Aulas ao vivo (HOJE + AMANHÃ)</span>
+                <span className="text-red-400 text-xs block font-bold">🎯 BÔNUS EXCLUSIVO: Apenas para os 15 primeiros que comprarem</span>
+              </div>
             </div>
           </div>
         </motion.div>

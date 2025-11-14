@@ -205,7 +205,8 @@ function QuizResult({ result }: QuizResultProps) {
               <span className="text-green-400">✅</span>
               <div>
                 <span className="font-bold">2 Aulas ao Vivo (HOJE + AMANHÃ)</span>
-                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+                <span className="text-red-400 text-xs block ml-0 font-bold">🎯 BÔNUS EXCLUSIVO: Apenas para os 15 primeiros que comprarem acesso ao App Premium</span>
+                <span className="text-gray-400 text-xs block ml-0">(Esta aula ao vivo NÃO estará disponível para todos - apenas para os 15 primeiros)</span>
               </div>
             </div>
           </div>
