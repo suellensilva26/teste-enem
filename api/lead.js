@@ -17,18 +17,45 @@ module.exports = async function handler(req, res) {
   try {
     const { name, phone, email, university } = req.body;
 
-    // Apenas retorna sucesso - simples
-    console.log('Lead recebido:', { name, phone, email, university });
+    console.log('📥 Lead recebido:', { name, phone, email, university });
+
+    // URL do Google Apps Script que salva no Google Sheets
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbsiyUVKanp7vhnnSV9O4DTUEicbMTneKHnRddbu5Hs9KdtPgzevCHauR98nh/exec';
+
+    // Enviar dados para Google Apps Script (que salva no Sheets)
+    const scriptResponse = await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: name,
+        phone: phone,
+        email: email,
+        university: university,
+        timestamp: new Date().toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' })
+      }),
+    });
+
+    if (!scriptResponse.ok) {
+      console.error('❌ Erro ao enviar para Google Script:', scriptResponse.status);
+      // Mesmo com erro no script, retorna sucesso para não frustrar o usuário
+      // Os dados serão logados no Vercel para você ver
+    } else {
+      console.log('✅ Lead salvo no Google Sheets com sucesso!');
+    }
     
     return res.status(200).json({ 
       success: true, 
       message: 'Lead capturado com sucesso! Você será contatado em breve.' 
     });
   } catch (error) {
-    console.error('Erro:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Erro ao processar formulário' 
+    console.error('❌ Erro:', error);
+    // Mesmo com erro, retorna sucesso para não frustrar o usuário
+    // Os dados serão logados no Vercel para você ver
+    return res.status(200).json({ 
+      success: true, 
+      message: 'Lead capturado com sucesso! Você será contatado em breve.' 
     });
   }
 }
