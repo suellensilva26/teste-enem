@@ -124,34 +124,45 @@ src/
 
 ## 🔧 Configuração
 
-### 📝 Captura de Leads - Formspree (HTML PURO)
+### 📝 Captura de Leads - Supabase
 
-**IMPORTANTE**: O formulário de captura de leads usa HTML nativo direto para Formspree.
+**Formulário de lead salva diretamente na tabela 'leads' do Supabase usando Supabase JS Client no frontend.**
 
-**NÃO USE**:
-- ❌ APIs internas (`/api/lead`)
-- ❌ fetch() ou axios para enviar dados
-- ❌ Handlers customizados de submit
-- ❌ Manipulação de estado para envio
+**Configuração necessária**:
 
-**O formulário funciona apenas com**:
-- ✅ `action="https://formspree.io/f/mvgdzwvy"`
-- ✅ `method="POST"`
-- ✅ Campos com atributo `name` correto
+1. **Crie um projeto no Supabase**: https://supabase.com
+
+2. **Crie a tabela `leads` usando SQL Editor** (NÃO use importação de planilha):
+   - Acesse: SQL Editor no painel do Supabase
+   - Execute o script SQL do arquivo `SUPABASE_SETUP.sql` (na raiz do projeto)
+   - Ou copie e cole este SQL:
+   ```sql
+   CREATE TABLE IF NOT EXISTS leads (
+     id BIGSERIAL PRIMARY KEY,
+     name TEXT NOT NULL,
+     phone TEXT NOT NULL,
+     email TEXT NOT NULL,
+     university TEXT NOT NULL,
+     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+   );
+   
+   ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
+   
+   CREATE POLICY "Permitir inserção pública de leads"
+   ON leads FOR INSERT TO anon WITH CHECK (true);
+   ```
+
+3. **Configure as variáveis de ambiente no Vercel**:
+   - `VITE_SUPABASE_URL` - URL do seu projeto Supabase (ex: https://xxxxx.supabase.co)
+   - `VITE_SUPABASE_ANON_KEY` - Chave pública (anon) do Supabase
+   - Encontre essas credenciais em: Settings → API → Project URL e anon public key
+
+**Arquivos**:
+- `src/components/LeadForm.tsx` - Formulário que salva no Supabase
+- `src/utils/supabaseClient.ts` - Cliente Supabase configurado
 
 **Onde ver os leads**:
-- Dashboard Formspree: https://formspree.io/forms/mvgdzwvy → aba "Submissões"
-- Email: Configure o destinatário no painel do Formspree
-
-**Arquivos removidos** (não são mais necessários):
-- ❌ `api/lead.js` (DELETADO)
-- ❌ `api/package.json` (DELETADO)
-- ❌ Qualquer código relacionado a `/api/lead`
-
-**Arquivo do formulário**: `src/components/LeadForm.tsx`
-- Usa HTML puro com `action` e `method` direto para Formspree
-- Mantém apenas estilos Tailwind CSS
-- Facebook Pixel tracking (não interfere no envio)
+- Dashboard Supabase: Acesse seu projeto → Table Editor → tabela `leads`
 
 ### Integração com Gateway de Pagamento
 
