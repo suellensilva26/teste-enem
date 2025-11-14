@@ -1,0 +1,330 @@
+import { useState, useEffect, useMemo } from 'react'
+import { QuizResult as QuizResultType } from '../utils/calculations'
+import CouponBanner from './CouponBanner'
+import { trackResultView } from '../utils/facebookPixel'
+
+type QuizResultProps = {
+  result: QuizResultType
+  onContinue: (price?: number) => void
+}
+
+function QuizResult({ result }: QuizResultProps) {
+  const [couponVisible, setCouponVisible] = useState(false)
+  const [couponApplied, setCouponApplied] = useState(false)
+  const [price, setPrice] = useState(197)
+
+  // FIXO: Memoizar fraquezas para evitar recálculo e alternância
+  const fixedWeaknesses = useMemo(() => {
+    return result.weaknesses.map((w, index) => ({
+      ...w,
+      // Garantir valores fixos
+      pointsLost: w.pointsLost || [57, 55, 53][index] || 50
+    }))
+  }, [result.weaknesses])
+
+  // FIXO: Total fixo baseado nas fraquezas memoizadas
+  const fixedTotalPoints = useMemo(() => {
+    return fixedWeaknesses.reduce((sum, w) => sum + w.pointsLost, 0)
+  }, [fixedWeaknesses])
+
+  useEffect(() => {
+    trackResultView()
+    
+    // Cupom aparece após 7 segundos
+    const timer = setTimeout(() => {
+      setCouponVisible(true)
+    }, 7000)
+
+    return () => clearTimeout(timer)
+  }, [])
+
+  const handleApplyCoupon = () => {
+    setCouponApplied(true)
+    setPrice(97)
+    
+    // Efeito visual de flash dourado
+    document.body.style.transition = 'background-color 0.3s'
+    document.body.style.backgroundColor = 'rgba(255, 215, 0, 0.1)'
+    setTimeout(() => {
+      document.body.style.backgroundColor = ''
+    }, 300)
+  }
+
+  // VALIDAÇÃO: Verificar se o resultado é válido
+  if (!result || !result.weaknesses || result.weaknesses.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="text-center text-danger">
+          <p className="text-2xl mb-2">⚠️</p>
+          <p className="font-bold">Erro ao calcular resultado</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col px-4 py-6 max-w-md mx-auto pb-32"
+      style={{ overflowX: 'hidden' }}
+    >
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="text-6xl mb-4">⚠️</div>
+        <h1 className="text-2xl md:text-3xl font-black mb-2 text-danger">
+          ANÁLISE REVELOU
+        </h1>
+        <p className="text-white text-sm">Baseado em sua análise neurológica:</p>
+      </div>
+
+      {/* Situação Crítica - SEM ANIMAÇÃO DE ESCALA */}
+      <div className="bg-gradient-to-br from-danger/20 to-black rounded-2xl p-6 mb-6 border-2 border-danger">
+        <div className="text-center">
+          <div className="text-3xl mb-2">🔴</div>
+          <div className="text-danger font-black text-4xl md:text-5xl mb-2">
+            {result.failChance}%
+          </div>
+          <div className="text-white font-bold text-lg mb-1">
+            DE CHANCE DE REPROVAR
+          </div>
+          <div className="text-gray-300 text-sm">
+            Baseado nas suas respostas, você tem{' '}
+            <span className="font-bold text-danger">{result.failChance}%</span> de chance de não atingir a nota necessária
+          </div>
+        </div>
+      </div>
+
+      {/* Fraquezas - VALORES FIXOS */}
+      <div className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 mb-6 border-2 border-gold/30">
+        <h2 className="text-xl font-black mb-4 text-white text-center">
+          ❌ SUAS FRAQUEZAS CRÍTICAS:
+        </h2>
+
+        <div className="space-y-4 mb-6">
+          {fixedWeaknesses.map((weakness, index) => {
+            if (!weakness || !weakness.name || weakness.pointsLost === undefined) {
+              return null;
+            }
+            
+            return (
+              <div
+                key={`weakness-${index}-${weakness.name}`}
+                className="bg-danger/20 rounded-xl p-4 border-l-4 border-danger"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">❌</span>
+                  <div className="flex-1">
+                    <div className="font-bold text-danger text-base mb-1">
+                      Fraqueza {index + 1}: {weakness.name}
+                    </div>
+                    <p className="text-gray-300 text-sm">
+                      Você perde aproximadamente{' '}
+                      <span className="font-bold text-gold">{weakness.pointsLost} pontos</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Total Perdido - VALOR FIXO */}
+        <div className="bg-gradient-to-r from-danger to-danger/80 rounded-xl p-4 text-center border-2 border-danger">
+          <div className="text-white font-black text-xl mb-1">
+            Total de pontos em risco: {fixedTotalPoints} pontos
+          </div>
+          <div className="text-danger-100 text-sm">
+            E você <span className="font-bold">PRECISA</span> desses pontos!
+          </div>
+        </div>
+      </div>
+
+      {/* IMAGEM DO APP */}
+      <div className="mb-6 rounded-xl overflow-hidden border-2 border-gold/30">
+        <div className="w-full h-64 bg-gradient-to-br from-gold/20 to-black flex items-center justify-center relative">
+          <div className="text-center z-10">
+            <div className="text-6xl mb-3">📱</div>
+            <div className="text-gold font-black text-xl mb-2">NeuroHack ENEM 2025</div>
+            <div className="text-white text-sm">App Premium</div>
+          </div>
+          {/* Placeholder - Substitua por imagem real */}
+          {/* <img src="/images/app-screenshot.jpg" alt="App NeuroHack" className="w-full h-full object-cover" /> */}
+        </div>
+      </div>
+
+      {/* COPY PROFUNDA - O QUE ESTÁ COMPRANDO */}
+      <div className="bg-gray-900 border-2 border-gray-700 rounded-xl p-6 mb-6">
+        <h2 className="text-xl font-black text-gold mb-4 text-center">
+          💰 O QUE VOCÊ ESTÁ COMPRANDO:
+        </h2>
+        
+        {/* PRODUTO PRINCIPAL */}
+        <div className="bg-black/50 rounded-lg p-4 mb-4 border-l-4 border-gold">
+          <div className="flex items-start gap-3 mb-2">
+            <span className="text-2xl">📱</span>
+            <div className="flex-1">
+              <div className="font-black text-gold text-lg mb-1">
+                APP NEUROHACK PREMIUM (VITALÍCIO)
+              </div>
+              <div className="text-white text-sm mb-2">
+                Este é o produto principal. Acesso completo e vitalício ao app com todas as funcionalidades.
+              </div>
+              <div className="text-gold font-bold text-base">
+                Valor: R$ 197
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* BÔNUS VÁLIDOS HOJE */}
+        <div className="bg-green-900/30 rounded-lg p-4 border-l-4 border-green-500">
+          <div className="font-black text-green-400 text-base mb-3">
+            🎁 BÔNUS EXCLUSIVOS (Válidos APENAS HOJE):
+          </div>
+          <div className="space-y-2 text-sm text-white">
+            <div className="flex items-start gap-2">
+              <span className="text-green-400">✅</span>
+              <div>
+                <span className="font-bold">5 Ebooks Especializados</span>
+                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-green-400">✅</span>
+              <div>
+                <span className="font-bold">8 Técnicas de Chute Inteligente</span>
+                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-green-400">✅</span>
+              <div>
+                <span className="font-bold">Suporte WhatsApp 24h</span>
+                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <span className="text-green-400">✅</span>
+              <div>
+                <span className="font-bold">2 Aulas ao Vivo (HOJE + AMANHÃ)</span>
+                <span className="text-gray-400 text-xs block ml-0">(Bônus - válido apenas hoje)</span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-green-500/30">
+            <p className="text-green-400 text-xs font-bold">
+              ⚠️ IMPORTANTE: Estes bônus são válidos APENAS HOJE. Após 24h, você recebe apenas o APP.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Solução */}
+      <div className="bg-gradient-to-r from-success/20 to-black rounded-xl p-6 mb-6 border-2 border-success/50">
+        <div className="text-center">
+          <div className="text-3xl mb-2">✅</div>
+          <h2 className="text-xl font-black text-white mb-3">
+            MAS EXISTE SOLUÇÃO (E É RÁPIDA):
+          </h2>
+          <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+            Técnicas neurológicas que corrigem suas deficiências em{' '}
+            <span className="font-bold text-gold">48 HORAS</span>
+          </p>
+        </div>
+      </div>
+
+
+      {/* Oferta Especial - COPY CLARA */}
+      <div className="bg-gradient-to-r from-gold/20 to-gold-light/20 rounded-2xl p-6 mb-6 border-2 border-gold">
+        <div className="bg-black rounded-xl p-4">
+          <div className="text-center mb-4">
+            <div className="text-gold font-black text-lg mb-2">
+              💰 OFERTA ESPECIAL
+            </div>
+            <div className="text-white text-sm mb-4">
+              {couponApplied ? '🎟️ CUPOM APLICADO AUTOMATICAMENTE ✓' : 'Válida por tempo limitado'}
+            </div>
+          </div>
+
+          {/* Preço */}
+          <div className="space-y-3 mb-4">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-400 text-sm">Valor do APP:</span>
+              <span className="text-white font-bold">R$ 197</span>
+            </div>
+            {couponApplied && (
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm">Desconto cupom:</span>
+                <span className="text-green-400 font-bold">-R$ 100</span>
+              </div>
+            )}
+            <div className="flex items-center justify-between border-t border-gray-700 pt-3">
+              <span className="text-gray-400 text-sm font-bold">TOTAL:</span>
+              <span className="text-gold font-black text-3xl">
+                R$ {price}
+              </span>
+            </div>
+          </div>
+
+          {/* Resumo do que recebe */}
+          <div className="bg-gray-900 rounded-lg p-3 mt-4">
+            <p className="text-xs text-gray-400 text-center mb-2">
+              Você recebe:
+            </p>
+            <div className="space-y-1 text-xs text-white">
+              <div className="flex items-center gap-2">
+                <span className="text-gold">✓</span>
+                <span>APP Premium (vitalício) - R$ 197</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-green-400">+</span>
+                <span>Bônus exclusivos (HOJE) - GRÁTIS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Button - DOURADO GRANDE VISÍVEL */}
+      <button
+        onClick={() => {
+          // Facebook Pixel - AddToCart e Purchase
+          if (typeof window !== 'undefined' && (window as any).fbq) {
+            (window as any).fbq('track', 'AddToCart', {
+              content_name: 'NeuroHack ENEM',
+              content_type: 'product',
+              value: price,
+              currency: 'BRL'
+            });
+            (window as any).fbq('track', 'Purchase', {
+              value: price,
+              currency: 'BRL',
+              content_name: 'NeuroHack ENEM 2025',
+              content_type: 'product'
+            });
+            console.log('✅ Pixel Events: AddToCart + Purchase');
+          }
+          // Redirecionar para Kiwify
+          window.location.href = 'https://pay.kiwify.com.br/za05nt2';
+        }}
+        className="w-full bg-yellow-400 text-black font-black text-xl px-6 py-6 rounded-lg hover:bg-yellow-300 transition active:scale-95 shadow-lg shadow-yellow-400/50 min-h-[60px] mb-4"
+      >
+        💳 GARANTIR MEU ACESSO AGORA POR R$ {price}
+      </button>
+
+      <p className="text-center text-xs text-gray-400 mb-4">
+        Ou continue reprovando... A escolha é sua
+      </p>
+
+      {/* Garantia */}
+      <div className="text-center text-xs text-gray-500 space-y-1">
+        <p>🔒 Pagamento 100% seguro</p>
+        <p>⏰ Oferta expira em 24h</p>
+        <p>💰 Reembolso em 7 dias se não estiver satisfeito</p>
+      </div>
+
+      {/* Cupom Banner */}
+      <CouponBanner visible={couponVisible} onApply={handleApplyCoupon} />
+    </div>
+  )
+}
+
+export default QuizResult

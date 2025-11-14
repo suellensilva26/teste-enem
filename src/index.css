@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    @apply bg-black text-white;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  
+  /* Mobile-first: garantir que não precisa zoom */
+  @media (max-width: 428px) {
+    body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+}
+
+@layer utilities {
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .text-shadow-gold {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.4);
+  }
+  
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 215, 0, 0.3);
+  }
+  
+  .glow-red {
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.5), 0 0 40px rgba(255, 68, 68, 0.3);
+  }
+  
+  .glow-green {
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5), 0 0 40px rgba(0, 255, 0, 0.3);
+  }
+  
+  .btn-mobile {
+    @apply min-h-[48px] px-6 py-3 text-base font-bold;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(255, 215, 0, 0.3);
+  }
+  
+  .btn-mobile:active {
+    transform: scale(0.98);
+  }
+  
+  /* VALIDAÇÃO: Garantir que textos não saem da caixa */
+  .overflow-wrap-anywhere {
+    overflow-wrap: anywhere;
+  }
+  
+  /* VALIDAÇÃO: Garantir altura mínima em botões */
+  button, .button {
+    min-height: 48px;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 428px) {
+    button, .button {
+      min-height: 52px;
+    }
+  }
+  
+  /* Smooth transitions */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Ripple effect */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .ripple::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .ripple:active::after {
+    width: 300px;
+    height: 300px;
+  }
+}
+
