@@ -1,35 +1,15 @@
-import { useEffect } from 'react'
-
 interface LeadFormProps {
   onSuccess: () => void
 }
 
 export default function LeadForm({ onSuccess }: LeadFormProps) {
-  // Rastrear quando o formulário é enviado com sucesso
-  useEffect(() => {
-    // Verificar se há parâmetro de sucesso na URL (Formspree redireciona)
-    const urlParams = new URLSearchParams(window.location.search)
-    if (urlParams.get('success') === 'true') {
-      // Facebook Pixel - Lead
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'Lead', {
-          content_name: 'Quiz Lead',
-          value: 97,
-          currency: 'BRL'
-        });
-        console.log('✅ Pixel Event: Lead');
-      }
-      onSuccess()
-    }
-  }, [onSuccess])
-
   return (
     <form 
       action="https://formspree.io/f/mvgdzwvy" 
       method="POST"
       className="space-y-4 bg-gray-900 p-6 rounded-lg border-2 border-yellow-400"
       onSubmit={() => {
-        // Facebook Pixel - Lead (também dispara no submit)
+        // Facebook Pixel - Lead
         if (typeof window !== 'undefined' && (window as any).fbq) {
           (window as any).fbq('track', 'Lead', {
             content_name: 'Quiz Lead',
@@ -37,6 +17,10 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
             currency: 'BRL'
           });
         }
+        // Chamar onSuccess após um pequeno delay para garantir que o submit aconteceu
+        setTimeout(() => {
+          onSuccess()
+        }, 100)
       }}
     >
       <div>
