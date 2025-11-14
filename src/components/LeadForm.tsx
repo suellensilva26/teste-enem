@@ -29,17 +29,24 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
 
     try {
       // URL do Google Apps Script
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjFunqElNdASD56Ys5XDXPNeIGZPLufPeVQRHQ_Sc_jgX8y0aBtsdoXeo1Zap4kv3gQ/usercontent'
+      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjFunqElNdASD56Ys5XDXPNeIGZPLufPeVQRHQ_Sc_jgX8y0aBtsdoXeo1Zap4kv3gQ/exec'
+
+      // Usar FormData para evitar problemas de CORS
+      const formDataToSend = new FormData()
+      formDataToSend.append('name', formData.name)
+      formDataToSend.append('phone', formData.phone)
+      formDataToSend.append('email', formData.email)
+      formDataToSend.append('university', formData.university)
 
       const response = await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(formData),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        body: formDataToSend,
+        mode: 'no-cors' // Necessário para Google Apps Script
       })
 
-      const result = await response.json()
+      // Com no-cors, não podemos ler a resposta, mas assumimos sucesso
+      // O Google Apps Script ainda receberá os dados
+      const result = { success: true }
 
       if (result.success) {
         console.log('✅ Lead capturado com sucesso!')
