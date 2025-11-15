@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Leads - Recuperação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        .section h2 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .info {
+            color: #2196F3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: #333;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Verificar e Recuperar Leads</h1>
+        
+        <div class="section">
+            <h2>1️⃣ Verificar localStorage</h2>
+            <button onclick="verificarLocalStorage()">Verificar localStorage</button>
+            <div id="localStorageResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>2️⃣ Verificar Supabase</h2>
+            <button onclick="verificarSupabase()">Verificar Supabase</button>
+            <div id="supabaseResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>3️⃣ Recuperar e Salvar no Supabase</h2>
+            <button onclick="recuperarESalvar()">Recuperar e Salvar Todos</button>
+            <div id="recuperarResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4️⃣ Verificar Tudo de Uma Vez</h2>
+            <button onclick="verificarTudo()" style="background: #2196F3;">Verificar Tudo</button>
+            <div id="tudoResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://tmhfqosgpmllabbizvxs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oMahW2x3-PlYe2V2au_wPQ_nEO_Vx5k';
+
+        function verificarLocalStorage() {
+            const result = document.getElementById('localStorageResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando localStorage...</p>';
+            
+            let html = '<h3>Resultado:</h3>';
+            
+            // Verificar leadData
+            const leadData = localStorage.getItem('leadData');
+            if (leadData) {
+                try {
+                    const parsed = JSON.parse(leadData);
+                    html += '<p class="success">✅ leadData encontrado:</p>';
+                    html += '<pre>' + JSON.stringify(parsed, null, 2) + '</pre>';
+                } catch (e) {
+                    html += '<p class="error">❌ Erro ao parsear leadData</p>';
+                }
+            } else {
+                html += '<p class="error">❌ leadData NÃO encontrado</p>';
+            }
+            
+            // Verificar allLeads
+            const allLeads = localStorage.getItem('allLeads');
+            if (allLeads) {
+                try {
+                    const parsed = JSON.parse(allLeads);
+                    html += `<p class="success">✅ allLeads encontrado: ${parsed.length} leads</p>`;
+                    if (parsed.length > 0) {
+                        html += '<table><tr><th>Nome</th><th>Email</th><th>Telefone</th><th>Universidade</th><th>Data</th></tr>';
+                        parsed.forEach(lead => {
+                            html += `<tr>
+                                <td>${lead.name || '-'}</td>
+                                <td>${lead.email || '-'}</td>
+                                <td>${lead.phone || '-'}</td>
+                                <td>${lead.university || '-'}</td>
+                                <td>${lead.savedAt || '-'}</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    }
+                } catch (e) {
+                    html += '<p class="error">❌ Erro ao parsear allLeads</p>';
+                }
+            } else {
+                html += '<p class="error">❌ allLeads NÃO encontrado</p>';
+            }
+            
+            // Verificar todos os itens
+            html += '<h3>Todos os itens do localStorage:</h3>';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                html += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+
+        async function verificarSupabase() {
+            const result = document.getElementById('supabaseResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando Supabase...</p>';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    let html = `<h3>Resultado:</h3>`;
+                    html += `<p class="success">✅ ${data.length} leads encontrados no Supabase</p>`;
+                    
+                    if (data.length > 0) {
+                        html += '<table><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Universidade</th><th>Data</th></tr>';
+                        data.forEach(lead => {
+                            html += `<tr>
+                                <td>${lead.id}</td>
+                                <td>${lead.name || '-'}</td>
+                                <td>${lead.email || '-'}</td>
+                                <td>${lead.phone || '-'}</td>
+                                <td>${lead.university || '-'}</td>
+                                <td>${lead.created_at || '-'}</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    } else {
+                        html += '<p class="error">❌ Nenhum lead encontrado na tabela!</p>';
+                    }
+                    
+                    result.innerHTML = html;
+                } else {
+                    const error = await response.text();
+                    result.innerHTML = `<p class="error">❌ Erro ao buscar: ${error}</p>`;
+                }
+            } catch (err) {
+                result.innerHTML = `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+
+        async function recuperarESalvar() {
+            const result = document.getElementById('recuperarResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Recuperando e salvando...</p>';
+            
+            let html = '<h3>Processo:</h3>';
+            let salvos = 0;
+            let erros = 0;
+            
+            // Verificar allLeads
+            const allLeads = localStorage.getItem('allLeads');
+            if (allLeads) {
+                try {
+                    const parsed = JSON.parse(allLeads);
+                    html += `<p>Encontrados ${parsed.length} leads no localStorage</p>`;
+                    
+                    for (let i = 0; i < parsed.length; i++) {
+                        const lead = parsed[i];
+                        html += `<p>Salvando lead ${i + 1}/${parsed.length}: ${lead.name || lead.email || 'Sem nome'}...</p>`;
+                        
+                        try {
+                            const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'apikey': SUPABASE_KEY,
+                                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                                    'Prefer': 'return=representation'
+                                },
+                                body: JSON.stringify({
+                                    name: lead.name || null,
+                                    phone: lead.phone || null,
+                                    email: lead.email || null,
+                                    university: lead.university || null
+                                })
+                            });
+                            
+                            if (response.ok) {
+                                salvos++;
+                                html += `<p class="success">✅ Lead ${i + 1} salvo!</p>`;
+                            } else {
+                                erros++;
+                                const error = await response.text();
+                                html += `<p class="error">❌ Erro ao salvar lead ${i + 1}: ${error}</p>`;
+                            }
+                        } catch (err) {
+                            erros++;
+                            html += `<p class="error">❌ Erro: ${err.message}</p>`;
+                        }
+                        
+                        // Aguardar um pouco
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
+                } catch (e) {
+                    html += `<p class="error">❌ Erro ao parsear allLeads: ${e.message}</p>`;
+                }
+            } else {
+                html += '<p class="error">❌ Nenhum lead encontrado no localStorage para recuperar</p>';
+            }
+            
+            html += `<h3>Resumo:</h3>`;
+            html += `<p class="success">✅ Salvos: ${salvos}</p>`;
+            html += `<p class="error">❌ Erros: ${erros}</p>`;
+            
+            result.innerHTML = html;
+        }
+
+        async function verificarTudo() {
+            verificarLocalStorage();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await verificarSupabase();
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar TODOS os Lugares - Leads Perdidos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        .section h2 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        .info {
+            color: #2196F3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: #333;
+            color: #4CAF50;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 VERIFICAR TODOS OS LUGARES - LEADS PERDIDOS</h1>
+        
+        <div class="section">
+            <h2>1️⃣ Verificar Supabase - TODAS as Tabelas</h2>
+            <button onclick="verificarTodasTabelasSupabase()">Verificar Todas as Tabelas</button>
+            <div id="supabaseTabelas" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>2️⃣ Verificar localStorage e sessionStorage</h2>
+            <button onclick="verificarStorage()">Verificar Storage</button>
+            <div id="storageResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>3️⃣ Verificar Formspree (se houver)</h2>
+            <button onclick="verificarFormspree()">Verificar Formspree</button>
+            <div id="formspreeResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4️⃣ Verificar Network Tab (Requisições Antigas)</h2>
+            <p class="info">⚠️ Abra DevTools (F12) → Network → Filtre por "supabase" ou "lead"</p>
+            <p class="info">Veja as requisições POST antigas e clique nelas para ver o Payload</p>
+        </div>
+        
+        <div class="section">
+            <h2>5️⃣ Verificar TODOS os Lugares de Uma Vez</h2>
+            <button onclick="verificarTudo()" style="background: #2196F3; font-size: 18px; padding: 20px 40px;">🔍 VERIFICAR TUDO</button>
+            <div id="tudoResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://tmhfqosgpmllabbizvxs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oMahW2x3-PlYe2V2au_wPQ_nEO_Vx5k';
+
+        async function verificarTodasTabelasSupabase() {
+            const result = document.getElementById('supabaseTabelas');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando todas as tabelas do Supabase...</p>';
+            
+            let html = '<h3>Resultado:</h3>';
+            
+            // Lista de tabelas possíveis
+            const tabelas = ['leads', 'quiz_results', 'submissions', 'form_data', 'contacts', 'users', 'registrations'];
+            
+            for (const tabela of tabelas) {
+                try {
+                    const response = await fetch(`${SUPABASE_URL}/rest/v1/${tabela}?select=*&limit=100`, {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.length > 0) {
+                            html += `<p class="success">✅ Tabela "${tabela}": ${data.length} registros encontrados</p>`;
+                            html += '<table><tr><th>ID</th><th>Dados</th></tr>';
+                            data.slice(0, 10).forEach(item => {
+                                html += `<tr>
+                                    <td>${item.id || '-'}</td>
+                                    <td>${JSON.stringify(item).substring(0, 200)}...</td>
+                                </tr>`;
+                            });
+                            html += '</table>';
+                            if (data.length > 10) {
+                                html += `<p>... e mais ${data.length - 10} registros</p>`;
+                            }
+                        } else {
+                            html += `<p>Tabela "${tabela}": 0 registros</p>`;
+                        }
+                    } else if (response.status === 404) {
+                        html += `<p>Tabela "${tabela}": não existe</p>`;
+                    } else {
+                        const error = await response.text();
+                        html += `<p>Tabela "${tabela}": erro (${response.status})</p>`;
+                    }
+                } catch (err) {
+                    html += `<p>Tabela "${tabela}": erro - ${err.message}</p>`;
+                }
+                
+                // Aguardar um pouco entre requisições
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            result.innerHTML = html;
+        }
+
+        function verificarStorage() {
+            const result = document.getElementById('storageResult');
+            result.style.display = 'block';
+            result.innerHTML = '<h3>Resultado:</h3>';
+            
+            let html = '<h4>localStorage:</h4>';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                html += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            
+            html += '<h4>sessionStorage:</h4>';
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                html += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+
+        async function verificarFormspree() {
+            const result = document.getElementById('formspreeResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">⚠️ Formspree não tem API pública para buscar dados.</p>';
+            result.innerHTML += '<p class="info">Você precisa acessar: https://formspree.io/accounts/login</p>';
+            result.innerHTML += '<p class="info">E verificar manualmente as submissões lá.</p>';
+        }
+
+        async function verificarTudo() {
+            const result = document.getElementById('tudoResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando tudo...</p>';
+            
+            // Verificar storage primeiro
+            verificarStorage();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Verificar todas as tabelas
+            await verificarTodasTabelasSupabase();
+            
+            result.innerHTML += '<p class="success">✅ Verificação completa! Veja os resultados acima.</p>';
+        }
+    </script>
+</body>
+</html>
+
