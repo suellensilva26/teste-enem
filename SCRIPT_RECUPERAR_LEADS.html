@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recuperar Leads Perdidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Recuperar Leads Perdidos</h1>
+        
+        <h2>1. Verificar localStorage</h2>
+        <button onclick="checkLocalStorage()">Verificar localStorage</button>
+        
+        <h2>2. Verificar sessionStorage</h2>
+        <button onclick="checkSessionStorage()">Verificar sessionStorage</button>
+        
+        <h2>3. Extrair todos os dados do localStorage</h2>
+        <button onclick="extractAllLocalStorage()">Extrair Tudo</button>
+        
+        <h2>4. Salvar no Supabase (se encontrar dados)</h2>
+        <button onclick="saveToSupabase()">Salvar no Supabase</button>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://tmhfqosgpmllabbizvxs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oMahW2x3-PlYe2V2au_wPQ_nEO_Vx5k';
+
+        function checkLocalStorage() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<h3>LocalStorage:</h3>';
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                result.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            
+            // Verificar especificamente leadData
+            const leadData = localStorage.getItem('leadData');
+            if (leadData) {
+                result.innerHTML += `<p class="success">✅ leadData encontrado: ${leadData}</p>`;
+            } else {
+                result.innerHTML += `<p class="error">❌ leadData não encontrado</p>`;
+            }
+        }
+
+        function checkSessionStorage() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<h3>SessionStorage:</h3>';
+            
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                result.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+        }
+
+        function extractAllLocalStorage() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<h3>Todos os dados do localStorage:</h3>';
+            
+            const allData = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                allData[key] = localStorage.getItem(key);
+            }
+            
+            result.innerHTML += `<pre>${JSON.stringify(allData, null, 2)}</pre>`;
+            
+            // Copiar para clipboard
+            navigator.clipboard.writeText(JSON.stringify(allData, null, 2));
+            result.innerHTML += '<p class="success">✅ Dados copiados para clipboard!</p>';
+        }
+
+        async function saveToSupabase() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<h3>Salvando no Supabase...</h3>';
+            
+            const leadData = localStorage.getItem('leadData');
+            
+            if (!leadData) {
+                result.innerHTML += '<p class="error">❌ Nenhum leadData encontrado no localStorage</p>';
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(leadData);
+                
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify({
+                        name: parsed.name,
+                        phone: parsed.phone,
+                        email: parsed.email,
+                        university: parsed.university
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    result.innerHTML += `<p class="success">✅ Lead salvo no Supabase: ${JSON.stringify(data, null, 2)}</p>`;
+                } else {
+                    const error = await response.text();
+                    result.innerHTML += `<p class="error">❌ Erro: ${error}</p>`;
+                }
+            } catch (err) {
+                result.innerHTML += `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
+
