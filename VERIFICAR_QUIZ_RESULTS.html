@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Dados do Quiz - Recuperação</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: #333;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Verificar Dados do Quiz - 30 Leads Perdidos</h1>
+        
+        <div class="section">
+            <h2>1️⃣ Verificar Tabela quiz_results</h2>
+            <button onclick="verificarQuizResults()">Verificar quiz_results</button>
+            <div id="quizResults" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>2️⃣ Verificar se Tabela Existe</h2>
+            <button onclick="verificarTabelaExiste()">Verificar se Tabela Existe</button>
+            <div id="tabelaExiste" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>3️⃣ Criar Tabela quiz_results (se não existir)</h2>
+            <button onclick="mostrarSQL()" style="background: #2196F3;">Mostrar SQL para Criar</button>
+            <div id="sqlResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4️⃣ Verificar localStorage (Dados do Quiz)</h2>
+            <button onclick="verificarLocalStorageQuiz()">Verificar localStorage</button>
+            <div id="localStorageQuiz" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>5️⃣ Verificar Leads e Vincular com Quiz</h2>
+            <button onclick="verificarLeadsEQuiz()">Verificar Leads e Quiz</button>
+            <div id="leadsEQuiz" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://tmhfqosgpmllabbizvxs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oMahW2x3-PlYe2V2au_wPQ_nEO_Vx5k';
+
+        async function verificarQuizResults() {
+            const result = document.getElementById('quizResults');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando tabela quiz_results...</p>';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/quiz_results?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                let html = '<h3>Resultado:</h3>';
+                html += `<p><strong>Status:</strong> ${response.status}</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    html += `<p class="success">✅ ${data.length} registros de quiz encontrados</p>`;
+                    
+                    if (data.length > 0) {
+                        html += '<table><tr><th>ID</th><th>Email</th><th>Nome</th><th>Fail Chance</th><th>Total Pontos</th><th>Data</th></tr>';
+                        data.forEach(item => {
+                            html += `<tr>
+                                <td>${item.id || '-'}</td>
+                                <td>${item.email || '-'}</td>
+                                <td>${item.name || '-'}</td>
+                                <td>${item.fail_chance || '-'}%</td>
+                                <td>${item.total_points_lost || '-'}</td>
+                                <td>${item.created_at || '-'}</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    } else {
+                        html += '<p class="error">❌ Nenhum registro de quiz encontrado!</p>';
+                        html += '<p class="info">⚠️ Isso significa que os dados do quiz NÃO estão sendo salvos.</p>';
+                    }
+                } else if (response.status === 404) {
+                    html += '<p class="error">❌ Tabela quiz_results NÃO EXISTE!</p>';
+                    html += '<p class="info">⚠️ Você precisa criar a tabela primeiro. Clique em "Mostrar SQL para Criar".</p>';
+                } else {
+                    const error = await response.text();
+                    html += `<p class="error">❌ Erro: ${error}</p>`;
+                }
+                
+                result.innerHTML = html;
+            } catch (err) {
+                result.innerHTML = `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+
+        async function verificarTabelaExiste() {
+            const result = document.getElementById('tabelaExiste');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando se tabela existe...</p>';
+            
+            // Tentar diferentes formas de verificar
+            let html = '<h3>Verificação:</h3>';
+            
+            // Método 1: Tentar buscar
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/quiz_results?select=*&limit=1`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                if (response.ok) {
+                    html += '<p class="success">✅ Tabela quiz_results EXISTE</p>';
+                } else if (response.status === 404) {
+                    html += '<p class="error">❌ Tabela quiz_results NÃO EXISTE</p>';
+                } else {
+                    html += `<p class="error">❌ Erro ao verificar: ${response.status}</p>`;
+                }
+            } catch (err) {
+                html += `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+
+        function mostrarSQL() {
+            const result = document.getElementById('sqlResult');
+            result.style.display = 'block';
+            
+            const sql = `-- Criar tabela para salvar dados do quiz
+CREATE TABLE IF NOT EXISTS quiz_results (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT,
+  name TEXT,
+  phone TEXT,
+  answers JSONB NOT NULL,
+  fail_chance INTEGER NOT NULL,
+  weaknesses JSONB NOT NULL,
+  total_points_lost INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Desabilitar RLS para permitir inserção
+ALTER TABLE quiz_results DISABLE ROW LEVEL SECURITY;
+
+-- OU criar política que permite INSERT para todos
+-- ALTER TABLE quiz_results ENABLE ROW LEVEL SECURITY;
+-- CREATE POLICY "Permitir inserção pública de quiz_results"
+-- ON quiz_results
+-- FOR INSERT
+-- TO anon
+-- WITH CHECK (true);`;
+            
+            result.innerHTML = `
+                <h3>SQL para Criar Tabela:</h3>
+                <p class="info">⚠️ Copie este SQL e execute no Supabase SQL Editor</p>
+                <pre style="background: #1a1a1a; padding: 15px; border-radius: 5px; overflow-x: auto;">${sql}</pre>
+                <p class="info">📋 Passos:</p>
+                <ol>
+                    <li>Acesse: https://supabase.com/dashboard</li>
+                    <li>Seu projeto → SQL Editor</li>
+                    <li>Cole o SQL acima</li>
+                    <li>Clique em "Run"</li>
+                    <li>Volte aqui e clique em "Verificar quiz_results"</li>
+                </ol>
+            `;
+        }
+
+        function verificarLocalStorageQuiz() {
+            const result = document.getElementById('localStorageQuiz');
+            result.style.display = 'block';
+            
+            let html = '<h3>Dados do localStorage:</h3>';
+            
+            // Verificar leadData
+            const leadData = localStorage.getItem('leadData');
+            if (leadData) {
+                html += '<p class="success">✅ leadData encontrado:</p>';
+                html += '<pre>' + leadData + '</pre>';
+            } else {
+                html += '<p class="error">❌ leadData não encontrado</p>';
+            }
+            
+            // Verificar se há dados de quiz salvos
+            html += '<h3>Procurando dados de quiz...</h3>';
+            let encontrouQuiz = false;
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.includes('quiz') || key.includes('answer') || key.includes('result')) {
+                    encontrouQuiz = true;
+                    html += `<p class="success">✅ ${key}:</p>`;
+                    html += '<pre>' + localStorage.getItem(key) + '</pre>';
+                }
+            }
+            
+            if (!encontrouQuiz) {
+                html += '<p class="error">❌ Nenhum dado de quiz encontrado no localStorage</p>';
+                html += '<p class="info">⚠️ Os dados do quiz não estão sendo salvos no localStorage</p>';
+            }
+            
+            result.innerHTML = html;
+        }
+
+        async function verificarLeadsEQuiz() {
+            const result = document.getElementById('leadsEQuiz');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando leads e quiz...</p>';
+            
+            let html = '<h3>Análise:</h3>';
+            
+            // Buscar leads
+            try {
+                const leadsResponse = await fetch(`${SUPABASE_URL}/rest/v1/leads?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                if (leadsResponse.ok) {
+                    const leads = await leadsResponse.json();
+                    html += `<p class="success">✅ ${leads.length} leads encontrados</p>`;
+                    
+                    // Buscar quiz_results
+                    try {
+                        const quizResponse = await fetch(`${SUPABASE_URL}/rest/v1/quiz_results?select=*`, {
+                            headers: {
+                                'apikey': SUPABASE_KEY,
+                                'Authorization': `Bearer ${SUPABASE_KEY}`
+                            }
+                        });
+                        
+                        if (quizResponse.ok) {
+                            const quizResults = await quizResponse.json();
+                            html += `<p class="${quizResults.length > 0 ? 'success' : 'error'}">${quizResults.length > 0 ? '✅' : '❌'} ${quizResults.length} resultados de quiz encontrados</p>`;
+                            
+                            if (quizResults.length === 0) {
+                                html += '<p class="error">❌ PROBLEMA: Nenhum resultado de quiz salvo!</p>';
+                                html += '<p class="info">⚠️ Os 30 leads fizeram o quiz, mas os dados NÃO foram salvos.</p>';
+                                html += '<p class="info">💡 SOLUÇÃO: Crie a tabela quiz_results no Supabase (clique em "Mostrar SQL para Criar")</p>';
+                            } else {
+                                html += '<h3>Vínculo Leads x Quiz:</h3>';
+                                html += '<table><tr><th>Lead Email</th><th>Quiz Email</th><th>Match?</th></tr>';
+                                
+                                leads.forEach(lead => {
+                                    const quizMatch = quizResults.find(q => q.email === lead.email);
+                                    html += `<tr>
+                                        <td>${lead.email || '-'}</td>
+                                        <td>${quizMatch ? quizMatch.email : '-'}</td>
+                                        <td>${quizMatch ? '✅' : '❌'}</td>
+                                    </tr>`;
+                                });
+                                html += '</table>';
+                            }
+                        } else {
+                            html += '<p class="error">❌ Erro ao buscar quiz_results: Tabela não existe ou erro de permissão</p>';
+                        }
+                    } catch (err) {
+                        html += `<p class="error">❌ Erro ao buscar quiz: ${err.message}</p>`;
+                    }
+                } else {
+                    html += '<p class="error">❌ Erro ao buscar leads</p>';
+                }
+            } catch (err) {
+                html += `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+
