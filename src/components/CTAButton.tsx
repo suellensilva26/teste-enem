@@ -99,11 +99,26 @@ function CTAButton({ timeRemaining, price = 97 }: CTAButtonProps) {
           </motion.div>
         )}
 
-        {/* Produto */}
+        {/* Header Melhorado */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+          className="bg-gradient-to-r from-green-600 to-green-700 rounded-2xl p-6 mb-6 text-center text-white"
+        >
+          <h2 className="text-2xl md:text-3xl font-black mb-4">
+            🚀 Desbloqueie Seu Acesso Agora
+          </h2>
+          <p className="text-lg mb-4">
+            Você receberá:
+          </p>
+        </motion.div>
+
+        {/* Produto */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
           className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 mb-6 border-2 border-gold/30"
         >
           <div className="text-center mb-6">
@@ -114,6 +129,32 @@ function CTAButton({ timeRemaining, price = 97 }: CTAButtonProps) {
             <p className="text-gray-300 text-sm">
               Sua última chance antes do ENEM
             </p>
+          </div>
+
+          {/* Lista de Benefícios Detalhada */}
+          <div className="bg-gray-900 rounded-xl p-4 mb-6">
+            <ul className="space-y-3 text-white text-sm text-left">
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 text-xl">✅</span>
+                <span>Acesso ao app completo (40+ aulas)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 text-xl">✅</span>
+                <span>100+ simulações com padrões do ENEM</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 text-xl">✅</span>
+                <span>IA para corrigir suas redações</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 text-xl">✅</span>
+                <span>Método Feynman + Active Recall</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-400 text-xl">✅</span>
+                <span>Protocolo 30 dias para vitória</span>
+              </li>
+            </ul>
           </div>
 
           {/* Preço */}
@@ -158,17 +199,32 @@ function CTAButton({ timeRemaining, price = 97 }: CTAButtonProps) {
           </div>
         </motion.div>
 
-        {/* Botão Principal CTA - DOURADO GRANDE VISÍVEL */}
+        {/* Preço Destacado */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gradient-to-r from-red-600 to-red-800 rounded-xl p-6 mb-6 text-center text-white"
+        >
+          <p className="text-3xl md:text-4xl font-black mb-4">
+            R$ {price},00
+          </p>
+          <p className="text-sm opacity-90 mb-4">
+            Garantia de 7 dias. Sem risco de perda.
+          </p>
+        </motion.div>
+
+        {/* Botão Principal CTA - CORES QUENTES */}
         <motion.button
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.5 }}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handlePurchase}
-          className="w-full bg-yellow-400 text-black font-black text-xl md:text-2xl px-6 py-6 rounded-lg hover:bg-yellow-300 transition active:scale-95 shadow-lg shadow-yellow-400/50 min-h-[60px] mb-4"
+          className="w-full bg-gradient-to-r from-red-500 to-orange-500 text-white font-black text-xl md:text-2xl px-6 py-6 rounded-lg hover:from-red-600 hover:to-orange-600 transition active:scale-95 shadow-lg shadow-red-500/50 min-h-[60px] mb-4"
         >
-          💳 GARANTIR MEU ACESSO AGORA POR R$ {price}
+          💳 Adquirir Acesso Agora
         </motion.button>
 
         {/* Trust Signals */}

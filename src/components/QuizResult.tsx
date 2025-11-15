@@ -362,6 +362,51 @@ function QuizResult({ result }: QuizResultProps) {
       </div>
 
 
+      {/* PROVA SOCIAL - ANTES DA OFERTA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-black/80 backdrop-blur-sm rounded-2xl p-6 mb-6 border-2 border-gold/30"
+      >
+        <h2 className="text-xl font-black text-gold mb-4 text-center">
+          💬 Resultados de Quem Já Usou:
+        </h2>
+        <div className="grid grid-cols-3 gap-3 mb-4">
+          <div className="text-center bg-gray-900 rounded-lg p-3">
+            <h3 className="text-gold font-black text-xl mb-1">8 em 10</h3>
+            <p className="text-white text-xs">Passaram no ENEM</p>
+          </div>
+          <div className="text-center bg-gray-900 rounded-lg p-3">
+            <h3 className="text-green-400 font-black text-xl mb-1">+40</h3>
+            <p className="text-white text-xs">Pontos aumento</p>
+          </div>
+          <div className="text-center bg-gray-900 rounded-lg p-3">
+            <h3 className="text-blue-400 font-black text-xl mb-1">30</h3>
+            <p className="text-white text-xs">Dias para dominar</p>
+          </div>
+        </div>
+        <p className="text-center font-bold text-red-400 text-sm">
+          ⏰ Próxima prova: 45 dias. Seu tempo está acabando.
+        </p>
+      </motion.div>
+
+      {/* GARANTIA */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-green-900/30 border-2 border-green-500 rounded-xl p-4 mb-6 text-center"
+      >
+        <h2 className="text-green-400 font-black text-lg mb-2">
+          ✅ Garantia de 7 Dias
+        </h2>
+        <p className="text-white text-sm mb-2">
+          Não gostou? Devolvemos seu dinheiro. <strong>SEM perguntas.</strong>
+        </p>
+        <p className="text-green-400 text-xs font-bold">
+          Mas sabemos que 98% das pessoas que começam NÃO pedem devolução.
+        </p>
+      </motion.div>
+
       {/* Oferta Especial - COPY CLARA */}
       <div className="bg-gradient-to-r from-gold/20 to-gold-light/20 rounded-2xl p-6 mb-6 border-2 border-gold">
         <div className="bg-black rounded-xl p-4">

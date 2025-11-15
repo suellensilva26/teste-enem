@@ -12,10 +12,130 @@ function SolutionTeaser({ onContinue }: SolutionTeaserProps) {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-4xl"
       >
+        {/* SEÇÃO PROBLEMA - NO INÍCIO */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-red-900/30 border-2 border-red-500 rounded-2xl p-6 mb-8"
+        >
+          <h2 className="text-2xl font-black text-red-400 mb-4 text-center">
+            🔴 Você Reconhece Esse Problema?
+          </h2>
+          <p className="text-white mb-4 text-center font-semibold text-lg">
+            Você estuda MÊS inteiro, faz simulados, lê livros... mas no dia ENEM chega aquele desespero. 
+            Sua mente congela. Aquela questão que você "sabia" agora parece impossível.
+          </p>
+          <ul className="space-y-3 text-white text-sm">
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <div>
+                <strong>Você estuda conteúdo, mas não aprende o PADRÃO do ENEM</strong>
+                <br />
+                <span className="text-gray-400">90% das questões repetem padrões que você não conhece</span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <div>
+                <strong>Você memoriza respostas, mas não RECONHECE quando o padrão aparece</strong>
+                <br />
+                <span className="text-gray-400">Sua mente fica em branco na prova</span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <div>
+                <strong>Você perde tempo resolvendo questões aleatoriamente</strong>
+                <br />
+                <span className="text-gray-400">Enquanto perde pontos que não volta mais</span>
+              </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <div>
+                <strong>Você tem ANSIEDADE porque não sabe se está no caminho certo</strong>
+                <br />
+                <span className="text-gray-400">Faltam 45 dias para a prova e você não sente confiança</span>
+              </div>
+            </li>
+          </ul>
+        </motion.div>
+
+        {/* SEÇÃO SOLUÇÃO */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-green-900/30 border-2 border-green-500 rounded-2xl p-6 mb-8"
+        >
+          <h2 className="text-2xl font-black text-green-400 mb-4 text-center">
+            ✅ Como o NeuroHack ENEM Resolve Tudo Isso
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-blue-400">
+              <h3 className="text-blue-400 font-black text-lg mb-2">
+                🧠 Método Revolucionário
+              </h3>
+              <p className="text-white text-sm mb-2">
+                <strong>Padrões, Não Conteúdo</strong><br />
+                Descubra os 7 padrões ocultos que representam 90% das questões. 
+                Reconheça-os em <strong>SEGUNDOS</strong>, não em minutos.
+              </p>
+              <div className="bg-green-900/50 rounded p-2 text-green-400 font-bold text-xs">
+                Resultado: +40 pontos na média
+              </div>
+            </div>
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-yellow-400">
+              <h3 className="text-yellow-400 font-black text-lg mb-2">
+                ⚡ Acelerador de Aprendizado
+              </h3>
+              <p className="text-white text-sm mb-2">
+                <strong>Método Feynman + Active Recall</strong><br />
+                Baseado em neurociência comprovada. 
+                Domine padrões em <strong>30 dias</strong>, não 6 meses.
+              </p>
+              <div className="bg-blue-900/50 rounded p-2 text-blue-400 font-bold text-xs">
+                Resultado: Mais tempo livre
+              </div>
+            </div>
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-purple-400">
+              <h3 className="text-purple-400 font-black text-lg mb-2">
+                🎯 Confiança Psicológica
+              </h3>
+              <p className="text-white text-sm mb-2">
+                <strong>Elimina Ansiedade</strong><br />
+                Seu cérebro fica <strong>CALMO</strong> porque reconhece padrões. 
+                Zero surpresas na prova.
+              </p>
+              <div className="bg-green-900/50 rounded p-2 text-green-400 font-bold text-xs">
+                Resultado: Melhor desempenho
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* URGÊNCIA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gradient-to-r from-red-600 to-red-800 rounded-xl p-6 mb-8 text-center text-white"
+        >
+          <h3 className="text-2xl font-black mb-2">⏰ O Tempo Está Acabando</h3>
+          <p className="text-lg mb-2">
+            <strong>Próxima prova: 45 dias</strong>
+          </p>
+          <p className="text-sm opacity-90">
+            Cada dia que passa é um ponto que você deixa na mesa. 
+            Comece agora mesmo seu diagnóstico.
+          </p>
+        </motion.div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
           className="text-center mb-12"
         >
           <div className="text-6xl mb-4">🎯</div>
