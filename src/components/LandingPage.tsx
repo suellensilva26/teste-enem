@@ -137,7 +137,7 @@ function LandingPage({ onStart }: LandingPageProps) {
           transition={{ delay: 0.2 }}
           className="text-2xl md:text-3xl font-black mb-4 text-gold text-shadow-gold leading-tight"
         >
-          Passe no ENEM em 30 Dias com os 7 Padrões Ocultos que 90% dos Candidatos Não Conhecem
+                  Passe no ENEM em 24 Horas com os 7 Padrões Ocultos que 90% dos Candidatos Não Conhecem
         </motion.h1>
 
         {/* Subheadline */}
@@ -214,7 +214,7 @@ function LandingPage({ onStart }: LandingPageProps) {
               </h3>
               <p className="text-white text-sm mb-2">
                 Método Feynman + Active Recall (baseado em neurociência). 
-                Domine padrões em <strong>30 dias</strong>, não em 6 meses.
+                        Domine padrões em <strong>24 horas</strong>, não em meses.
               </p>
               <p className="text-blue-400 font-bold text-sm">
                 Resultado: Mais tempo livre para revisar
@@ -255,12 +255,12 @@ function LandingPage({ onStart }: LandingPageProps) {
               <p className="text-white text-xs">Pontos aumento médio</p>
             </div>
             <div className="text-center">
-              <h3 className="text-blue-400 font-black text-2xl mb-1">30</h3>
-              <p className="text-white text-xs">Dias para dominar</p>
+              <h3 className="text-blue-400 font-black text-2xl mb-1">24h</h3>
+              <p className="text-white text-xs">Para dominar</p>
             </div>
           </div>
           <p className="text-center font-bold text-red-400 text-sm mt-4">
-            ⏰ Próxima prova: 45 dias. Seu tempo está acabando.
+            ⏰ ENEM é em 24 horas. Seu tempo está acabando AGORA.
           </p>
         </motion.div>
 

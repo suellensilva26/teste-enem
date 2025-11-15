@@ -154,7 +154,7 @@ function QuizResult({ result }: QuizResultProps) {
       {/* COPY PROFUNDA - O QUE ESTÁ COMPRANDO */}
       <div className="bg-gray-900 border-2 border-gray-700 rounded-xl p-6 mb-6">
         <h2 className="text-xl font-black text-gold mb-4 text-center">
-          💰 O QUE VOCÊ ESTÁ COMPRANDO:
+          💎 O QUE VOCÊ VAI RECEBER AGORA:
         </h2>
         
         {/* PRODUTO PRINCIPAL */}
@@ -169,7 +169,7 @@ function QuizResult({ result }: QuizResultProps) {
                 Este é o produto principal. Acesso completo e vitalício ao app com todas as funcionalidades.
               </div>
               <div className="text-gold font-bold text-base">
-                Valor: R$ 197
+                      Valor: R$ 147,90
               </div>
             </div>
           </div>
@@ -266,7 +266,7 @@ function QuizResult({ result }: QuizResultProps) {
               <span className="text-purple-400 text-2xl">🎲</span>
               <div>
                 <span className="font-black text-purple-400 text-lg">8 TÉCNICAS DE CHUTE INTELIGENTE</span>
-                <span className="text-green-400 text-sm block font-bold">(R$ 197 de valor)</span>
+                        <span className="text-green-400 text-sm block font-bold">(R$ 147,90 de valor)</span>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-white ml-8">
@@ -381,12 +381,12 @@ function QuizResult({ result }: QuizResultProps) {
             <p className="text-white text-xs">Pontos aumento</p>
           </div>
           <div className="text-center bg-gray-900 rounded-lg p-3">
-            <h3 className="text-blue-400 font-black text-xl mb-1">30</h3>
-            <p className="text-white text-xs">Dias para dominar</p>
+            <h3 className="text-blue-400 font-black text-xl mb-1">24h</h3>
+            <p className="text-white text-xs">Para dominar</p>
           </div>
         </div>
         <p className="text-center font-bold text-red-400 text-sm">
-          ⏰ Próxima prova: 45 dias. Seu tempo está acabando.
+          ⏰ ENEM é em 24 horas. Seu tempo está acabando AGORA.
         </p>
       </motion.div>
 

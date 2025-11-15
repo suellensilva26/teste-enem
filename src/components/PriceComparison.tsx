@@ -5,8 +5,8 @@ type PriceComparisonProps = {
 }
 
 function PriceComparison({ onContinue }: PriceComparisonProps) {
-  const originalPrice = 197
-  const currentPrice = 97
+  const originalPrice = 147.90
+  const currentPrice = 47.90
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-20">

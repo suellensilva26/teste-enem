@@ -75,7 +75,7 @@ function CTAButton({ timeRemaining, price = 47.90 }: CTAButtonProps) {
             QUE VAI MUDAR TUDO
           </h1>
           <p className="text-lg text-gray-300 font-bold">
-            Em <span className="text-red-400">48 horas</span>, você pode estar{' '}
+            Em <span className="text-red-400">24 horas</span>, você pode estar{' '}
             <span className="text-gold">APROVADO</span>
           </p>
         </motion.div>
@@ -170,7 +170,7 @@ function CTAButton({ timeRemaining, price = 47.90 }: CTAButtonProps) {
           className="bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-green-900/40 rounded-2xl p-6 mb-6 border-2 border-purple-500/50 text-center"
         >
           <h2 className="text-2xl md:text-3xl font-black mb-4 text-white">
-            🧠 IMAGINE SEU FUTURO EM 30 DIAS:
+            🧠 IMAGINE SEU FUTURO EM 24 HORAS:
           </h2>
           <div className="space-y-3 text-left text-white text-sm">
             <div className="flex items-start gap-3">
@@ -248,7 +248,7 @@ function CTAButton({ timeRemaining, price = 47.90 }: CTAButtonProps) {
               <div className="flex items-start gap-3 bg-black/30 rounded-lg p-3">
                 <span className="text-purple-400 text-xl">🎲</span>
                 <div>
-                  <span className="font-bold text-gold">8 Técnicas de Chute Inteligente (R$ 197 de valor)</span>
+                  <span className="font-bold text-gold">8 Técnicas de Chute Inteligente (R$ 147,90 de valor)</span>
                   <br />
                   <span className="text-gray-300 text-xs">Acerte mesmo sem saber a resposta</span>
                 </div>
@@ -447,7 +447,7 @@ function CTAButton({ timeRemaining, price = 47.90 }: CTAButtonProps) {
           <div className="space-y-3 text-white text-sm">
             <div className="bg-black/30 rounded-lg p-3">
               <p className="italic mb-2">
-                "Passei em Medicina usando o NeuroHack. Em 30 dias, reconhecia os padrões do ENEM em segundos. Valeu cada centavo!"
+                "Passei em Medicina usando o NeuroHack. Em 24 horas, reconhecia os padrões do ENEM em segundos. Valeu cada centavo!"
               </p>
               <p className="text-xs text-gray-400">— Ana P., 20 anos, São Paulo</p>
             </div>

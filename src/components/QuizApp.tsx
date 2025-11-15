@@ -25,11 +25,20 @@ function QuizApp() {
   const [answers, setAnswers] = useState<Answer[]>([])
   const [price, setPrice] = useState(147.90) // Preço inicial: com cupom fica 47.90
   const showUrgency = true
-  const [timeRemaining, setTimeRemaining] = useState(48 * 60 * 60) // 48 horas em segundos
+  // Calcular tempo até 16 de janeiro de 2025 às 23:59:59
+  const calculateTimeUntilENEM = () => {
+    const now = new Date()
+    const enemDate = new Date('2025-01-16T23:59:59')
+    const diff = Math.max(0, Math.floor((enemDate.getTime() - now.getTime()) / 1000))
+    return diff
+  }
+
+  const [timeRemaining, setTimeRemaining] = useState(calculateTimeUntilENEM())
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining(prev => Math.max(0, prev - 1))
+      const newTime = calculateTimeUntilENEM()
+      setTimeRemaining(Math.max(0, newTime))
     }, 1000)
     return () => clearInterval(timer)
   }, [])

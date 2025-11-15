@@ -55,7 +55,7 @@ function SolutionTeaser({ onContinue }: SolutionTeaserProps) {
               <div>
                 <strong>Você tem ANSIEDADE porque não sabe se está no caminho certo</strong>
                 <br />
-                <span className="text-gray-400">Faltam 45 dias para a prova e você não sente confiança</span>
+                        <span className="text-gray-400">Faltam apenas 24 horas para a prova e você não sente confiança</span>
               </div>
             </li>
           </ul>
@@ -92,7 +92,7 @@ function SolutionTeaser({ onContinue }: SolutionTeaserProps) {
               <p className="text-white text-sm mb-2">
                 <strong>Método Feynman + Active Recall</strong><br />
                 Baseado em neurociência comprovada. 
-                Domine padrões em <strong>30 dias</strong>, não 6 meses.
+                        Domine padrões em <strong>24 horas</strong>, não em meses.
               </p>
               <div className="bg-blue-900/50 rounded p-2 text-blue-400 font-bold text-xs">
                 Resultado: Mais tempo livre
@@ -123,7 +123,7 @@ function SolutionTeaser({ onContinue }: SolutionTeaserProps) {
         >
           <h3 className="text-2xl font-black mb-2">⏰ O Tempo Está Acabando</h3>
           <p className="text-lg mb-2">
-            <strong>Próxima prova: 45 dias</strong>
+            <strong>ENEM é em 24 horas</strong>
           </p>
           <p className="text-sm opacity-90">
             Cada dia que passa é um ponto que você deixa na mesa. 
