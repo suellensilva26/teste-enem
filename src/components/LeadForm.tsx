@@ -16,6 +16,20 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
+  // Função para validar email
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return emailRegex.test(email) && email.length >= 5 && email.includes('.')
+  }
+
+  // Função para validar telefone brasileiro
+  const validatePhone = (phone: string): boolean => {
+    // Remove tudo que não é número
+    const numbersOnly = phone.replace(/\D/g, '')
+    // Telefone brasileiro deve ter 10 ou 11 dígitos (com DDD)
+    return numbersOnly.length >= 10 && numbersOnly.length <= 11
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
@@ -34,6 +48,29 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
     setError('')
 
     try {
+      // VALIDAÇÕES ANTES DE ENVIAR
+      
+      // Validar nome (mínimo 3 caracteres, apenas letras e espaços)
+      const nameRegex = /^[a-zA-ZÀ-ÿ\s]{3,}$/
+      if (!nameRegex.test(formData.name.trim())) {
+        throw new Error('Nome inválido! Use apenas letras e mínimo de 3 caracteres.')
+      }
+
+      // Validar telefone
+      if (!validatePhone(formData.phone)) {
+        throw new Error('Telefone inválido! Digite um número válido com DDD (ex: 11987654321 ou (11) 98765-4321)')
+      }
+
+      // Validar email
+      if (!validateEmail(formData.email)) {
+        throw new Error('Email inválido! Digite um email válido (ex: seu@email.com)')
+      }
+
+      // Validar universidade (não pode ser vazio)
+      if (!formData.university || formData.university.trim() === '') {
+        throw new Error('Selecione uma universidade!')
+      }
+
       console.log('📤 Enviando para Supabase:', formData)
       
       // Verificar se Supabase está configurado
@@ -154,45 +191,60 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         <label className="block text-white font-bold mb-2 text-sm">
           📝 Seu Nome *
         </label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-          placeholder="João Silva"
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
-        />
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="João Silva"
+                  minLength={3}
+                  pattern="[a-zA-ZÀ-ÿ\s]{3,}"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Mínimo 3 caracteres, apenas letras
+                </p>
       </div>
 
       <div>
         <label className="block text-white font-bold mb-2 text-sm">
           📱 Seu Telefone (WhatsApp) *
         </label>
-        <input
-          type="text"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-          placeholder="(11) 99999-9999"
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
-        />
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="(11) 99999-9999 ou 11987654321"
+                  pattern="[0-9\s\(\)\-]+"
+                  minLength={10}
+                  maxLength={15}
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Digite apenas números com DDD (ex: 11987654321)
+                </p>
       </div>
 
       <div>
         <label className="block text-white font-bold mb-2 text-sm">
           📧 Seu Email *
         </label>
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-          placeholder="seu@email.com"
-          className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
-        />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="seu@email.com"
+                  pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                  className="w-full px-4 py-3 rounded-lg bg-gray-800 border-2 border-gray-600 text-white placeholder-gray-500 focus:border-yellow-400 focus:outline-none"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Digite um email válido (ex: seu@email.com)
+                </p>
       </div>
 
       <div>
