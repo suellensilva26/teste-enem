@@ -274,20 +274,8 @@ function LandingPage({ onStart }: LandingPageProps) {
           <img 
             src="/images/banner.png" 
             alt="NeuroHack ENEM 2025" 
-            className="w-full h-auto object-cover"
-            onError={(e) => {
-              // Fallback se imagem não carregar
-              const target = e.target as HTMLImageElement;
-              target.style.display = 'none';
-              target.parentElement!.innerHTML = `
-                <div class="w-full h-48 bg-gradient-to-br from-gold/20 to-black flex items-center justify-center">
-                  <div class="text-center">
-                    <span class="text-6xl mb-2 block">🎓</span>
-                    <span class="text-gold font-bold">Estudantes Aprovados</span>
-                  </div>
-                </div>
-              `;
-            }}
+            className="w-full h-auto object-cover rounded-xl"
+            loading="lazy"
           />
         </motion.div>
 
