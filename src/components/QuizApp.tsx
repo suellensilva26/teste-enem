@@ -112,6 +112,17 @@ function QuizApp() {
       }
 
       // Salvar no Supabase
+      console.log('🎯 TABELA DESTINO: quiz_results')
+      console.log('🎯 Dados que serão salvos:', {
+        email: email,
+        name: name,
+        phone: phone,
+        answers: answers,
+        fail_chance: quizResult.failChance,
+        weaknesses: quizResult.weaknesses,
+        total_points_lost: quizResult.totalPointsLost || 0
+      })
+      
       const { data, error } = await supabase
         .from('quiz_results')
         .insert([
