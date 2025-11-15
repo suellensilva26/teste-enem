@@ -77,7 +77,21 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
         throw new Error(errorMessage)
       }
 
+      // DEBUG DETALHADO: Mostrar EXATAMENTE o que foi retornado
       console.log('✅ Lead salvo no Supabase:', data)
+      console.log('📊 Tipo de data:', typeof data)
+      console.log('📊 É array?', Array.isArray(data))
+      console.log('📊 Tamanho:', data?.length)
+      console.log('📊 Data completo (JSON):', JSON.stringify(data, null, 2))
+      
+      // Verificar se realmente foi salvo
+      if (!data || (Array.isArray(data) && data.length === 0)) {
+        console.error('⚠️ ATENÇÃO: Supabase retornou vazio ou null!')
+        console.error('⚠️ Isso significa que o lead NÃO foi salvo!')
+        console.error('⚠️ Verifique RLS e estrutura da tabela no Supabase!')
+      } else {
+        console.log('✅ CONFIRMADO: Lead realmente salvo! ID:', data[0]?.id || 'sem ID')
+      }
 
       // Salvar dados do lead no localStorage para usar depois no quiz
       const leadDataToStore = {

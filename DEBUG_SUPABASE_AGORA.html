@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Supabase - Ver Dados Reais</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: #333;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 DEBUG SUPABASE - Ver Dados Reais</h1>
+        
+        <div class="section">
+            <h2>1️⃣ Testar Inserção no Supabase</h2>
+            <button onclick="testarInsercao()">Testar Inserir Lead</button>
+            <div id="testeResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>2️⃣ Ver TODOS os Leads no Supabase</h2>
+            <button onclick="verTodosLeads()">Ver Todos os Leads</button>
+            <div id="leadsResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>3️⃣ Ver Estrutura da Tabela</h2>
+            <button onclick="verEstrutura()">Ver Estrutura</button>
+            <div id="estruturaResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>4️⃣ Verificar RLS (Row Level Security)</h2>
+            <button onclick="verificarRLS()">Verificar RLS</button>
+            <div id="rlsResult" class="result" style="display:none;"></div>
+        </div>
+        
+        <div class="section">
+            <h2>5️⃣ Ver localStorage</h2>
+            <button onclick="verLocalStorage()">Ver localStorage</button>
+            <div id="localResult" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://tmhfqosgpmllabbizvxs.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_oMahW2x3-PlYe2V2au_wPQ_nEO_Vx5k';
+
+        async function testarInsercao() {
+            const result = document.getElementById('testeResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Testando inserção...</p>';
+            
+            const testData = {
+                name: 'TESTE DEBUG ' + new Date().getTime(),
+                phone: '11999999999',
+                email: 'teste' + new Date().getTime() + '@teste.com',
+                university: 'Teste'
+            };
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Prefer': 'return=representation'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                let html = '<h3>Resposta Completa:</h3>';
+                html += `<p><strong>Status:</strong> ${response.status} ${response.statusText}</p>`;
+                html += `<p><strong>Headers:</strong></p><pre>${JSON.stringify([...response.headers.entries()], null, 2)}</pre>`;
+                
+                const text = await response.text();
+                html += `<p><strong>Body (texto):</strong></p><pre>${text}</pre>`;
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        html += `<p class="success">✅ Inserção bem-sucedida!</p>`;
+                        html += `<p><strong>Dados retornados:</strong></p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    } catch (e) {
+                        html += `<p class="error">❌ Erro ao parsear JSON: ${e.message}</p>`;
+                    }
+                } else {
+                    html += `<p class="error">❌ Erro na inserção!</p>`;
+                }
+                
+                result.innerHTML = html;
+            } catch (err) {
+                result.innerHTML = `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+
+        async function verTodosLeads() {
+            const result = document.getElementById('leadsResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Buscando todos os leads...</p>';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads?select=*&order=created_at.desc`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                let html = '<h3>Resultado:</h3>';
+                html += `<p><strong>Status:</strong> ${response.status}</p>`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    html += `<p class="success">✅ ${data.length} leads encontrados</p>`;
+                    
+                    if (data.length > 0) {
+                        html += '<table><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Universidade</th><th>Data</th></tr>';
+                        data.forEach(lead => {
+                            html += `<tr>
+                                <td>${lead.id || '-'}</td>
+                                <td>${lead.name || '-'}</td>
+                                <td>${lead.email || '-'}</td>
+                                <td>${lead.phone || '-'}</td>
+                                <td>${lead.university || '-'}</td>
+                                <td>${lead.created_at || '-'}</td>
+                            </tr>`;
+                        });
+                        html += '</table>';
+                    } else {
+                        html += '<p class="error">❌ Nenhum lead encontrado na tabela!</p>';
+                    }
+                } else {
+                    const error = await response.text();
+                    html += `<p class="error">❌ Erro: ${error}</p>`;
+                }
+                
+                result.innerHTML = html;
+            } catch (err) {
+                result.innerHTML = `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+
+        async function verEstrutura() {
+            const result = document.getElementById('estruturaResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando estrutura...</p>';
+            
+            try {
+                // Tentar buscar com limit 0 para ver estrutura
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads?select=*&limit=1`, {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                });
+                
+                let html = '<h3>Estrutura da Tabela:</h3>';
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.length > 0) {
+                        html += '<p class="success">✅ Estrutura encontrada:</p>';
+                        html += '<pre>' + JSON.stringify(data[0], null, 2) + '</pre>';
+                    } else {
+                        html += '<p>Nenhum dado para mostrar estrutura. Tentando inserir teste...</p>';
+                        await testarInsercao();
+                    }
+                } else {
+                    const error = await response.text();
+                    html += `<p class="error">❌ Erro: ${error}</p>`;
+                }
+                
+                result.innerHTML = html;
+            } catch (err) {
+                result.innerHTML = `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+        }
+
+        async function verificarRLS() {
+            const result = document.getElementById('rlsResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p class="info">🔍 Verificando RLS...</p>';
+            
+            let html = '<h3>Teste de RLS:</h3>';
+            
+            // Tentar inserir sem autenticação (como anon)
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    body: JSON.stringify({
+                        name: 'TESTE RLS',
+                        phone: '11999999999',
+                        email: 'teste-rls@teste.com',
+                        university: 'Teste'
+                    })
+                });
+                
+                html += `<p><strong>Status:</strong> ${response.status}</p>`;
+                
+                if (response.ok) {
+                    html += '<p class="success">✅ RLS permite inserção (anon key funciona)</p>';
+                } else {
+                    const error = await response.text();
+                    html += `<p class="error">❌ RLS bloqueando inserção:</p>`;
+                    html += `<pre>${error}</pre>`;
+                }
+            } catch (err) {
+                html += `<p class="error">❌ Erro: ${err.message}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+
+        function verLocalStorage() {
+            const result = document.getElementById('localResult');
+            result.style.display = 'block';
+            
+            let html = '<h3>Dados do localStorage:</h3>';
+            
+            const leadData = localStorage.getItem('leadData');
+            if (leadData) {
+                html += '<p class="success">✅ leadData encontrado:</p>';
+                html += '<pre>' + leadData + '</pre>';
+            } else {
+                html += '<p class="error">❌ leadData não encontrado</p>';
+            }
+            
+            const allLeads = localStorage.getItem('allLeads');
+            if (allLeads) {
+                html += '<p class="success">✅ allLeads encontrado:</p>';
+                html += '<pre>' + allLeads + '</pre>';
+            } else {
+                html += '<p class="error">❌ allLeads não encontrado</p>';
+            }
+            
+            html += '<h3>Todos os itens:</h3>';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                html += `<p><strong>${key}:</strong> ${localStorage.getItem(key)}</p>`;
+            }
+            
+            result.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+
