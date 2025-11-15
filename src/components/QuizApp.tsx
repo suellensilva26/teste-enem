@@ -10,6 +10,7 @@ import CTAButton from './CTAButton'
 import { questions } from '../data/questions'
 import { calculateResult } from '../utils/calculations'
 import { trackCompleteRegistration } from '../utils/facebookPixel'
+import { supabase } from '../utils/supabaseClient'
 
 export type Answer = {
   questionId: number
@@ -73,9 +74,68 @@ function QuizApp() {
     } else {
       trackCompleteRegistration() // Facebook Pixel - CompleteRegistration
       console.log('✅ QUIZ COMPLETO! Total de respostas:', updatedAnswers.length);
+      
+      // Calcular resultado
+      const quizResult = calculateResult(updatedAnswers)
+      
+      // Salvar dados do quiz no Supabase
+      saveQuizResults(updatedAnswers, quizResult)
+      
       setTimeout(() => {
         setCurrentScreen('result')
       }, 800)
+    }
+  }
+
+  // Função para salvar dados do quiz no Supabase
+  const saveQuizResults = async (answers: Answer[], quizResult: ReturnType<typeof calculateResult>) => {
+    try {
+      console.log('📤 Salvando dados do quiz no Supabase...')
+      console.log('Respostas:', answers)
+      console.log('Resultado:', quizResult)
+
+      // Tentar pegar dados do lead do localStorage (se existir)
+      const leadData = localStorage.getItem('leadData')
+      let email = null
+      let name = null
+      let phone = null
+
+      if (leadData) {
+        try {
+          const parsed = JSON.parse(leadData)
+          email = parsed.email || null
+          name = parsed.name || null
+          phone = parsed.phone || null
+        } catch (e) {
+          console.warn('Não foi possível ler dados do lead do localStorage')
+        }
+      }
+
+      // Salvar no Supabase
+      const { data, error } = await supabase
+        .from('quiz_results')
+        .insert([
+          {
+            email: email,
+            name: name,
+            phone: phone,
+            answers: answers,
+            fail_chance: quizResult.failChance,
+            weaknesses: quizResult.weaknesses,
+            total_points_lost: quizResult.totalPointsLost || 0
+          }
+        ])
+        .select()
+
+      if (error) {
+        console.error('❌ Erro ao salvar quiz no Supabase:', error)
+        console.error('Código:', error.code)
+        console.error('Mensagem:', error.message)
+      } else {
+        console.log('✅ Dados do quiz salvos no Supabase:', data)
+      }
+    } catch (err) {
+      console.error('❌ Erro ao salvar quiz:', err)
     }
   }
 

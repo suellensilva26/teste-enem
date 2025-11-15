@@ -79,6 +79,14 @@ export default function LeadForm({ onSuccess }: LeadFormProps) {
 
       console.log('✅ Lead salvo no Supabase:', data)
 
+      // Salvar dados do lead no localStorage para usar depois no quiz
+      localStorage.setItem('leadData', JSON.stringify({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        university: formData.university
+      }))
+
       // Sucesso
       setMessage('Lead enviado com sucesso!')
       
