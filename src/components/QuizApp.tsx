@@ -129,10 +129,31 @@ function QuizApp() {
 
       if (error) {
         console.error('❌ Erro ao salvar quiz no Supabase:', error)
-        console.error('Código:', error.code)
-        console.error('Mensagem:', error.message)
+        console.error('❌ Código do erro:', error.code)
+        console.error('❌ Mensagem:', error.message)
+        console.error('❌ Detalhes:', error.details)
+        console.error('❌ Hint:', error.hint)
+        
+        // Verificar se é erro de tabela não existe
+        if (error.code === '42P01' || error.message?.includes('does not exist')) {
+          console.error('🚨 PROBLEMA CRÍTICO: Tabela quiz_results NÃO EXISTE no Supabase!')
+          console.error('🚨 SOLUÇÃO: Execute o SQL do arquivo SUPABASE_QUIZ_TABLE.sql no Supabase SQL Editor')
+        }
       } else {
         console.log('✅ Dados do quiz salvos no Supabase:', data)
+        console.log('📊 Tipo de data:', typeof data)
+        console.log('📊 É array?', Array.isArray(data))
+        console.log('📊 Tamanho:', data?.length)
+        console.log('📊 Data completo (JSON):', JSON.stringify(data, null, 2))
+        
+        // Verificar se realmente foi salvo
+        if (!data || (Array.isArray(data) && data.length === 0)) {
+          console.error('⚠️ ATENÇÃO: Supabase retornou vazio ou null!')
+          console.error('⚠️ Isso significa que o quiz NÃO foi salvo!')
+          console.error('⚠️ Verifique RLS e estrutura da tabela quiz_results no Supabase!')
+        } else {
+          console.log('✅ CONFIRMADO: Quiz realmente salvo! ID:', data[0]?.id || 'sem ID')
+        }
       }
     } catch (err) {
       console.error('❌ Erro ao salvar quiz:', err)
