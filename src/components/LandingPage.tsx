@@ -264,20 +264,31 @@ function LandingPage({ onStart }: LandingPageProps) {
           </p>
         </motion.div>
 
-        {/* Foto de Confiança - Placeholder */}
+        {/* Imagem Banner */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.8 }}
           className="mb-6 rounded-xl overflow-hidden border-2 border-gold/30 glow-gold"
         >
-          <div className="w-full h-48 bg-gradient-to-br from-gold/20 to-black flex items-center justify-center">
-            <div className="text-center">
-              <span className="text-6xl mb-2 block">🎓</span>
-              <span className="text-gold font-bold">Estudantes Aprovados</span>
-            </div>
-            {/* Substitua por: <img src="/images/success-student.jpg" alt="Estudante aprovado" className="w-full h-full object-cover" /> */}
-          </div>
+          <img 
+            src="/images/banner.png" 
+            alt="NeuroHack ENEM 2025" 
+            className="w-full h-auto object-cover"
+            onError={(e) => {
+              // Fallback se imagem não carregar
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              target.parentElement!.innerHTML = `
+                <div class="w-full h-48 bg-gradient-to-br from-gold/20 to-black flex items-center justify-center">
+                  <div class="text-center">
+                    <span class="text-6xl mb-2 block">🎓</span>
+                    <span class="text-gold font-bold">Estudantes Aprovados</span>
+                  </div>
+                </div>
+              `;
+            }}
+          />
         </motion.div>
 
         {/* CTA Principal - ETAPA 1 (Baixa Fricção) */}
