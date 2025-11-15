@@ -23,7 +23,7 @@ function QuizApp() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('landing')
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<Answer[]>([])
-  const [price, setPrice] = useState(197) // Preço inicial
+  const [price, setPrice] = useState(147.90) // Preço inicial: com cupom fica 47.90
   const showUrgency = true
   const [timeRemaining, setTimeRemaining] = useState(48 * 60 * 60) // 48 horas em segundos
 

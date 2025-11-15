@@ -12,7 +12,7 @@ type QuizResultProps = {
 function QuizResult({ result }: QuizResultProps) {
   const [couponVisible, setCouponVisible] = useState(false)
   const [couponApplied, setCouponApplied] = useState(false)
-  const [price, setPrice] = useState(197)
+  const [price, setPrice] = useState(147.90) // Preço inicial: com cupom fica 47.90
 
   // FIXO: Memoizar fraquezas para evitar recálculo e alternância
   const fixedWeaknesses = useMemo(() => {
@@ -41,7 +41,7 @@ function QuizResult({ result }: QuizResultProps) {
 
   const handleApplyCoupon = () => {
     setCouponApplied(true)
-    setPrice(97)
+    setPrice(47.90) // 147.90 - 100 = 47.90
     
     // Efeito visual de flash dourado
     document.body.style.transition = 'background-color 0.3s'
@@ -421,20 +421,20 @@ function QuizResult({ result }: QuizResultProps) {
 
           {/* Preço */}
           <div className="space-y-3 mb-4">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">Valor do APP:</span>
-              <span className="text-white font-bold">R$ 197</span>
-            </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-400 text-sm">Valor do APP:</span>
+                      <span className="text-white font-bold">R$ 147,90</span>
+                    </div>
             {couponApplied && (
               <div className="flex items-center justify-between">
                 <span className="text-gray-400 text-sm">Desconto cupom:</span>
-                <span className="text-green-400 font-bold">-R$ 100</span>
+                <span className="text-green-400 font-bold">-R$ 100,00</span>
               </div>
             )}
             <div className="flex items-center justify-between border-t border-gray-700 pt-3">
               <span className="text-gray-400 text-sm font-bold">TOTAL:</span>
               <span className="text-gold font-black text-3xl">
-                R$ {price}
+                R$ {price.toFixed(2).replace('.', ',')}
               </span>
             </div>
           </div>
@@ -447,7 +447,7 @@ function QuizResult({ result }: QuizResultProps) {
             <div className="space-y-1 text-xs text-white">
               <div className="flex items-center gap-2">
                 <span className="text-gold">✓</span>
-                <span>APP Premium (vitalício) - R$ 197</span>
+                <span>APP Premium (vitalício) - R$ 147,90</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-green-400">+</span>
@@ -482,7 +482,7 @@ function QuizResult({ result }: QuizResultProps) {
                 }}
                 className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-black text-xl px-6 py-6 rounded-lg hover:from-orange-600 hover:to-red-600 transition active:scale-95 shadow-lg shadow-orange-500/50 min-h-[60px] mb-4"
               >
-                🚀 Desbloqueie Seu Plano Personalizado (R$ {price})
+                🚀 Desbloqueie Seu Plano Personalizado (R$ {price.toFixed(2).replace('.', ',')})
               </button>
 
       <p className="text-center text-xs text-gray-400 mb-4">
