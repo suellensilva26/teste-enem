@@ -56,7 +56,10 @@ function CouponBanner({ onApply, visible }: CouponBannerProps) {
           {/* CUPOM COM FUNDO VERDE VISÍVEL */}
           <div className="bg-green-500 border-2 border-green-300 rounded-lg p-6 shadow-2xl animate-pulse">
             <p className="text-black font-black text-center text-lg mb-3">
-              🎟️ CUPOM AUTOMÁTICO GERADO!
+              🎁 PRESENTE ESPECIAL PARA VOCÊ!
+            </p>
+            <p className="text-black text-center text-sm mb-3 font-bold">
+              Você ganhou um desconto exclusivo
             </p>
             <div className="bg-black text-yellow-400 text-center py-4 rounded-lg mb-4 font-black text-xl">
               -R$ 100 DE DESCONTO

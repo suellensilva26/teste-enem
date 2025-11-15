@@ -130,19 +130,14 @@ function LandingPage({ onStart }: LandingPageProps) {
           ⚠️
         </motion.div>
 
-        {/* Headline Principal */}
+        {/* Headline Principal - NOVO COPY */}
         <motion.h1
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-2xl md:text-3xl font-black mb-4 text-gold text-shadow-gold"
+          className="text-2xl md:text-3xl font-black mb-4 text-gold text-shadow-gold leading-tight"
         >
-          <motion.span
-            animate={{ opacity: [1, 0.7, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            🚨 FALTAM 48 HORAS PRO ENEM 🚨
-          </motion.span>
+          Passe no ENEM em 30 Dias com os 7 Padrões Ocultos que 90% dos Candidatos Não Conhecem
         </motion.h1>
 
         {/* Subheadline */}
@@ -152,42 +147,121 @@ function LandingPage({ onStart }: LandingPageProps) {
           transition={{ delay: 0.4 }}
           className="text-base md:text-lg mb-6 text-white font-semibold leading-relaxed"
         >
-          Você <span className="text-gold font-black">REALMENTE</span> sabe em qual matéria pode{' '}
-          <span className="text-danger font-black">REPROVAR</span>?
+          Descubra os padrões que representam <span className="text-gold font-black">90% das questões</span> do ENEM.
           <br />
-          Descubra agora em <span className="text-gold font-black">2 minutos</span>
+          Reconheça-os em <span className="text-gold font-black">SEGUNDOS</span>, não em minutos.
         </motion.p>
 
-        {/* Validação Social */}
+        {/* Seção de PROBLEMA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-black/80 backdrop-blur-sm rounded-xl p-4 mb-6 border border-gold/30"
+          className="bg-red-900/30 border-2 border-red-500 rounded-xl p-5 mb-6"
         >
-          <div className="space-y-3">
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-2xl">📊</span>
-              <span className="text-gold font-black text-lg">
-                {stats.studentsTested.toLocaleString('pt-BR')}
-              </span>
-              <span className="text-white text-sm">alunos fizeram</span>
+          <h2 className="text-xl font-black text-red-400 mb-4 text-center">
+            🔴 O Problema do ENEM em 2025:
+          </h2>
+          <p className="text-white mb-4 text-center font-semibold">
+            Você estuda MÊS inteiro, faz simulados, lê livros... mas no dia chega aquele desespero.
+          </p>
+          <ul className="space-y-2 text-white text-sm">
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <span>Você estuda conteúdo, mas não aprende o <strong>PADRÃO</strong> do ENEM</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <span>Você memoriza respostas, mas não <strong>RECONHECE</strong> quando o padrão aparece</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <span>Você perde tempo resolvendo questões aleatoriamente (enquanto perde pontos que não volta)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-red-400 text-xl">❌</span>
+              <span>Você tem <strong>ANSIEDADE</strong> porque não sabe se está no caminho certo</span>
+            </li>
+          </ul>
+        </motion.div>
+
+        {/* Seção de SOLUÇÃO */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="bg-green-900/30 border-2 border-green-500 rounded-xl p-5 mb-6"
+        >
+          <h2 className="text-xl font-black text-green-400 mb-4 text-center">
+            ✅ Como o NeuroHack ENEM Resolve Isso:
+          </h2>
+          <div className="space-y-4">
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-green-400">
+              <h3 className="text-green-400 font-black text-lg mb-2">
+                🧠 Método Revolucionário - Padrões, Não Conteúdo
+              </h3>
+              <p className="text-white text-sm mb-2">
+                Descubra os 7 padrões ocultos que representam 90% das questões do ENEM. 
+                Reconheça-os em <strong>SEGUNDOS</strong>, não em minutos.
+              </p>
+              <p className="text-green-400 font-bold text-sm">
+                Resultado: +40 pontos de média
+              </p>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-2xl">✅</span>
-              <span className="text-success font-black text-lg">
-                {stats.weaknessesFound.toLocaleString('pt-BR')}
-              </span>
-              <span className="text-white text-sm">descobriram uma fraqueza crítica</span>
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-blue-400">
+              <h3 className="text-blue-400 font-black text-lg mb-2">
+                ⚡ Acelerador de Aprendizado
+              </h3>
+              <p className="text-white text-sm mb-2">
+                Método Feynman + Active Recall (baseado em neurociência). 
+                Domine padrões em <strong>30 dias</strong>, não em 6 meses.
+              </p>
+              <p className="text-blue-400 font-bold text-sm">
+                Resultado: Mais tempo livre para revisar
+              </p>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-2xl">🎯</span>
-              <span className="text-gold font-black text-lg">
-                {stats.studentsPassed.toLocaleString('pt-BR')}
-              </span>
-              <span className="text-white text-sm">PASSARAM depois</span>
+            <div className="bg-black/50 rounded-lg p-4 border-l-4 border-purple-400">
+              <h3 className="text-purple-400 font-black text-lg mb-2">
+                🎯 Confiança Psicológica
+              </h3>
+              <p className="text-white text-sm mb-2">
+                Seu cérebro fica <strong>CALMO</strong> porque você reconhece os padrões. 
+                Sem surpresas na prova.
+              </p>
+              <p className="text-purple-400 font-bold text-sm">
+                Resultado: Melhor desempenho sob pressão
+              </p>
             </div>
           </div>
+        </motion.div>
+
+        {/* Prova Social Melhorada */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.0 }}
+          className="bg-black/80 backdrop-blur-sm rounded-xl p-5 mb-6 border border-gold/30"
+        >
+          <h2 className="text-xl font-black text-gold mb-4 text-center">
+            💬 Resultado de Quem Já Usou:
+          </h2>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="text-center">
+              <h3 className="text-gold font-black text-2xl mb-1">8 em 10</h3>
+              <p className="text-white text-xs">Passaram no ENEM em 2025</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-green-400 font-black text-2xl mb-1">+40</h3>
+              <p className="text-white text-xs">Pontos aumento médio</p>
+            </div>
+            <div className="text-center">
+              <h3 className="text-blue-400 font-black text-2xl mb-1">30</h3>
+              <p className="text-white text-xs">Dias para dominar</p>
+            </div>
+          </div>
+          <p className="text-center font-bold text-red-400 text-sm mt-4">
+            ⏰ Próxima prova: 45 dias. Seu tempo está acabando.
+          </p>
         </motion.div>
 
         {/* Foto de Confiança - Placeholder */}
@@ -206,7 +280,7 @@ function LandingPage({ onStart }: LandingPageProps) {
           </div>
         </motion.div>
 
-        {/* CTA Principal */}
+        {/* CTA Principal - ETAPA 1 (Baixa Fricção) */}
         <motion.button
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -214,25 +288,43 @@ function LandingPage({ onStart }: LandingPageProps) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleStartClick}
-          className="w-full bg-black border-2 border-gold text-gold font-black text-lg md:text-xl px-6 py-4 rounded-xl glow-gold ripple btn-mobile mb-4 transition-smooth"
+          className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-black text-lg md:text-xl px-6 py-5 rounded-xl shadow-lg shadow-orange-500/50 mb-4 transition-smooth hover:from-orange-600 hover:to-red-600"
         >
-          🎯 COMEÇAR TESTE AGORA - 2 MINUTOS
+          📝 Faça Seu Quiz de Diagnóstico GRÁTIS
         </motion.button>
+
+        {/* Seção de Garantia */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="bg-green-900/30 border-2 border-green-500 rounded-xl p-4 mb-4 text-center"
+        >
+          <h2 className="text-green-400 font-black text-lg mb-2">
+            ✅ Garantia de 7 Dias
+          </h2>
+          <p className="text-white text-sm mb-2">
+            Não gostou? Devolvemos seu dinheiro. <strong>SEM perguntas.</strong>
+          </p>
+          <p className="text-green-400 text-xs font-bold">
+            Mas sabemos que 98% das pessoas que começam NÃO pedem devolução.
+          </p>
+        </motion.div>
 
         {/* Urgência Final */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="text-sm text-gray-400 mb-2"
+          transition={{ delay: 1.4 }}
+          className="text-sm text-gray-400 mb-2 text-center"
         >
           ou continue achando que está preparado...
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.4 }}
-          className="text-sm text-danger font-bold"
+          transition={{ delay: 1.6 }}
+          className="text-sm text-danger font-bold text-center"
         >
           87% acham... e reprovam mesmo assim
         </motion.p>

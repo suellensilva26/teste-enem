@@ -369,9 +369,9 @@ function QuizResult({ result }: QuizResultProps) {
             <div className="text-gold font-black text-lg mb-2">
               💰 OFERTA ESPECIAL
             </div>
-            <div className="text-white text-sm mb-4">
-              {couponApplied ? '🎟️ CUPOM APLICADO AUTOMATICAMENTE ✓' : 'Válida por tempo limitado'}
-            </div>
+                    <div className="text-white text-sm mb-4">
+                      {couponApplied ? '🎁 DESCONTO EXCLUSIVO APLICADO ✓' : 'Válida por tempo limitado'}
+                    </div>
           </div>
 
           {/* Preço */}
@@ -413,32 +413,32 @@ function QuizResult({ result }: QuizResultProps) {
         </div>
       </div>
 
-      {/* CTA Button - DOURADO GRANDE VISÍVEL */}
-      <button
-        onClick={() => {
-          // Facebook Pixel - AddToCart e Purchase
-          if (typeof window !== 'undefined' && (window as any).fbq) {
-            (window as any).fbq('track', 'AddToCart', {
-              content_name: 'NeuroHack ENEM',
-              content_type: 'product',
-              value: price,
-              currency: 'BRL'
-            });
-            (window as any).fbq('track', 'Purchase', {
-              value: price,
-              currency: 'BRL',
-              content_name: 'NeuroHack ENEM 2025',
-              content_type: 'product'
-            });
-            console.log('✅ Pixel Events: AddToCart + Purchase');
-          }
-          // Redirecionar para Kiwify
-          window.location.href = 'https://pay.kiwify.com.br/za05nt2';
-        }}
-        className="w-full bg-yellow-400 text-black font-black text-xl px-6 py-6 rounded-lg hover:bg-yellow-300 transition active:scale-95 shadow-lg shadow-yellow-400/50 min-h-[60px] mb-4"
-      >
-        💳 GARANTIR MEU ACESSO AGORA POR R$ {price}
-      </button>
+              {/* CTA Button - ETAPA 2 (Após Quiz) */}
+              <button
+                onClick={() => {
+                  // Facebook Pixel - AddToCart e Purchase
+                  if (typeof window !== 'undefined' && (window as any).fbq) {
+                    (window as any).fbq('track', 'AddToCart', {
+                      content_name: 'NeuroHack ENEM',
+                      content_type: 'product',
+                      value: price,
+                      currency: 'BRL'
+                    });
+                    (window as any).fbq('track', 'Purchase', {
+                      value: price,
+                      currency: 'BRL',
+                      content_name: 'NeuroHack ENEM 2025',
+                      content_type: 'product'
+                    });
+                    console.log('✅ Pixel Events: AddToCart + Purchase');
+                  }
+                  // Redirecionar para Kiwify
+                  window.location.href = 'https://pay.kiwify.com.br/za05nt2';
+                }}
+                className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white font-black text-xl px-6 py-6 rounded-lg hover:from-orange-600 hover:to-red-600 transition active:scale-95 shadow-lg shadow-orange-500/50 min-h-[60px] mb-4"
+              >
+                🚀 Desbloqueie Seu Plano Personalizado (R$ {price})
+              </button>
 
       <p className="text-center text-xs text-gray-400 mb-4">
         Ou continue reprovando... A escolha é sua
